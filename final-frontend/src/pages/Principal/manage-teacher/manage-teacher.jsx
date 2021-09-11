@@ -7,9 +7,13 @@ export const Container = styled.div`
   max-height: 100vh;
   .top {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 200px 100px 1fr 200px 200px;
+    /* justify-content: space-between; */
     margin-top: 50px;
     padding: 0 50px;
+    /* border: 2px solid red; */
+    width: 80vw;
+    margin: 50px auto;
     a {
       justify-self: right;
       border: 1px solid #071928;

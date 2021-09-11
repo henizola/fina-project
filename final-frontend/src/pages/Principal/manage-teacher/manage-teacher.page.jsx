@@ -1,17 +1,65 @@
-import React, { useState } from 'react';
-
-import { Container } from './manage-teacher';
-
-import { Link } from 'react-router-dom';
-
-import PrincipalSubNav from '../../../components/principal-subnav/principal-subnav';
-
 import MaterialTable, {
   MTableEditField,
 } from 'material-table';
+import React, {
+  useEffect,
+  useState,
+} from 'react';
+import { Link } from 'react-router-dom';
+import PrincipalSubNav from '../../../components/principal-subnav/principal-subnav';
+import { Container } from './manage-teacher';
+
+import axios from 'axios';
 
 const ManageTeacher = () => {
   const [filterd, setFilterd] = useState([]);
+
+  const [teachers, setTeachers] = useState([]);
+
+  useEffect(() => {
+    async function fetchTeachers() {
+      axios
+        .post(
+          'http://localhost:9000/api/get-teachers'
+        )
+        .then(function (response) {
+          console.log(response.data);
+
+          const teachers = [];
+
+          let cls = '';
+
+          response.data.map((teach) => {
+            teach.classToTeach.map((clss) =>
+              cls.concat(
+                `${clss.grade} ${teach.classToTeach[1].section}`
+              )
+            );
+            teachers.push({
+              firstName: teach.firstName,
+              lastName: teach.lastName,
+              middleName: teach.middleName,
+              subject: teach.subject,
+              phone: teach.phone,
+              email: teach.email,
+              homeRoom: teach.homeRoom,
+              classTeach: teach.classToTeach.map(
+                (clss) =>
+                  `${clss.grade}${teach.classToTeach[1].section} ,`
+              ),
+            });
+          });
+
+          setTeachers(teachers);
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .then(function () {});
+    }
+    fetchTeachers();
+  }, []);
+
   const columns = [
     {
       field: 'firstName',
@@ -33,110 +81,40 @@ const ManageTeacher = () => {
       field: 'email',
       title: 'Email',
     },
-    // {
-    //   field: 'homeroom',
-    //   title: 'Home Room',
-    //   width: 10,
-    // },
+    {
+      field: 'homeRoom[0].grade',
+      title: 'Home Room',
+      width: 10,
+    },
     {
       field: 'classTeach',
       title: 'Class To Teach',
     },
   ];
 
-  const [data, setData] = useState([
-    {
-      id: 1,
-      lastName: 'Snow',
-      firstName: 'Jon',
-      subject: 'English',
-      email: 'Snow@gmail.com',
-      phone: '+251 912-145-345',
-    },
-    {
-      id: 2,
-      lastName: 'Lannister',
-      firstName: 'Cersei',
-      subject: 'Biology',
-      email: 'Snow@gmail.com',
-      phone: '+251 912-145-345',
-    },
-    {
-      id: 3,
-      lastName: 'Lannister',
-      firstName: 'Jaime',
-      subject: 'Geography',
-      email: 'Snow@gmail.com',
-      phone: '+251 912-145-345',
-    },
-    {
-      id: 4,
-      lastName: 'Stark',
-      firstName: 'Arya',
-      age: 16,
-      subject: 'Sport',
-      email: 'Snow@gmail.com',
-      phone: '+251 912-145-345',
-    },
-    {
-      id: 5,
-      lastName: 'Targaryen',
-      firstName: 'Daenerys',
-      age: null,
-      subject: 'Amharic',
-      email: 'Snow@gmail.com',
-      phone: '+251 912-145-345',
-    },
-    {
-      id: 6,
-      lastName: 'Melisandre',
-      firstName: 'Lanster',
-      age: 150,
-      subject: 'Spoken',
-      email: 'Snow@gmail.com',
-      phone: '+251 912-145-345',
-    },
-    {
-      id: 7,
-      lastName: 'Clifford',
-      firstName: 'Ferrara',
-      subject: 'Geography',
-      email: 'Snow@gmail.com',
-      phone: '+251 912-145-345',
-    },
-    {
-      id: 8,
-      lastName: 'Frances',
-      firstName: 'Rossini',
-      subject: 'Geography',
-      email: 'Snow@gmail.com',
-      phone: '+251 912-145-345',
-    },
-    {
-      id: 9,
-      lastName: 'Roxie',
-      firstName: 'Harvey',
-      subject: 'Geography',
-      email: 'Snow@gmail.com',
-      phone: '+251 912-145-345',
-    },
-  ]);
   return (
     <Container>
       <PrincipalSubNav />
       <div className="top">
+        <Link to="create-teacher">
+          Create Teacher
+        </Link>
         <div></div>
         <h1 className="header">
           Manage Teachers
         </h1>
+
         <Link to="create-teacher">
-          Create Teacher
+          Manage Homeroom
+        </Link>
+        <Link to="create-teacher">
+          Manage Class To Teach
         </Link>
       </div>
       <div className="table">
         <MaterialTable
           columns={columns}
-          data={data}
+          data={teachers}
           disableSelectionOnClick
           title=""
           editable={{
@@ -148,20 +126,20 @@ const ManageTeacher = () => {
               new Promise((resolve, reject) => {
                 const index =
                   selectedRow.tableData.id;
-                let updatedRows = [...data];
+                let updatedRows = [...teachers];
                 updatedRows.splice(index, 1);
                 setTimeout(() => {
-                  setData(updatedRows);
+                  setTeachers(updatedRows);
                   resolve();
                 }, 2000);
               }),
             onRowUpdate: (updatedRow, oldRow) =>
               new Promise((resolve, reject) => {
                 const index = oldRow.tableData.id;
-                const updatedRows = [...data];
+                const updatedRows = [...teachers];
                 updatedRows[index] = updatedRow;
                 setTimeout(() => {
-                  setData(updatedRows);
+                  setTeachers(updatedRows);
                   resolve();
                 }, 2000);
               }),
@@ -169,7 +147,7 @@ const ManageTeacher = () => {
               new Promise((resolve, reject) => {
                 const rows =
                   Object.values(selectedRows);
-                const updatedRows = [...data];
+                const updatedRows = [...teachers];
                 let index;
                 rows.map((emp) => {
                   index =
@@ -177,11 +155,14 @@ const ManageTeacher = () => {
                   updatedRows[index] =
                     emp.newData;
                 });
-                setData(updatedRows);
+                setTeachers(updatedRows);
                 resolve();
               }),
           }}
-          options={{ actionsColumnIndex: -1 }}
+          options={{
+            actionsColumnIndex: -1,
+            exportButton: true,
+          }}
           components={{
             MTableEditField: (props) => (
               <div

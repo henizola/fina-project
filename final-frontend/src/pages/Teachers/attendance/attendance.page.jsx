@@ -4,12 +4,62 @@ import MaterialTable, {
 import {
   default as React,
   useState,
+  useEffect,
 } from 'react';
 import TeacherSubNav from '../../../components/teacher-sub-nav/teacher-sub-nav';
 import { Container } from './attendance.styles';
 
+import axios from 'axios';
+
 const Attendance = () => {
-  const [filterd, setFilterd] = useState([]);
+  const [data, setData] = useState([]);
+  let combination = [];
+
+  useEffect(() => {
+    const login = async () => {
+      axios
+        .post(
+          'http://localhost:9000/api/get-attendance',
+          {
+            grade: 7,
+            section: ' B ',
+          }
+        )
+        .then(function (response) {
+          response.data.map((d, index) => {
+            d.attendance.map(
+              (r) =>
+                r.remark === 'A' &&
+                combination.push({ index, r })
+            );
+          });
+          const newData = [];
+
+          response.data.map((d, index) => {
+            newData.push({
+              fullName: `${d.firstName} ${d.middleName}`,
+              daysAbsent: combination.filter(
+                (com) => com.index === index
+              ).length,
+            });
+          });
+
+          setData(newData);
+        })
+
+        .catch(function (error) {
+          if (error.response) {
+            alert(error.response.data.detail);
+          }
+          console.log('henok', error);
+        })
+        .then(function () {
+          // always executed
+          console.log(data);
+        });
+    };
+    login();
+  }, []);
   var today = new Date();
   var dd = String(today.getDate()).padStart(
     2,
@@ -26,7 +76,7 @@ const Attendance = () => {
 
   const columns = [
     {
-      field: 'name',
+      field: 'fullName',
       title: 'Full  Name',
       editable: 'never',
     },
@@ -69,68 +119,6 @@ const Attendance = () => {
     },
   ];
 
-  const [data, setData] = useState([
-    {
-      id: 1,
-      name: ' Jon Snow',
-      daysAbsent: 2,
-      today: 1,
-    },
-    {
-      id: 1,
-      name: ' Jon Snow',
-      daysAbsent: 2,
-      today: 0,
-    },
-    {
-      id: 1,
-      name: ' Jon Snow',
-      daysAbsent: 2,
-      today: 1,
-    },
-    {
-      id: 1,
-      name: ' Jon Snow',
-      daysAbsent: 2,
-      today: 0,
-    },
-    {
-      id: 1,
-      name: ' Jon Snow',
-      daysAbsent: 2,
-      today: 1,
-    },
-    {
-      id: 1,
-      name: ' Jon Snow',
-      daysAbsent: 2,
-      today: 0,
-    },
-    {
-      id: 1,
-      name: ' Jon Snow',
-      daysAbsent: 2,
-      today: 1,
-    },
-    {
-      id: 1,
-      name: ' Jon Snow',
-      daysAbsent: 2,
-      today: 0,
-    },
-    {
-      id: 1,
-      name: ' Jon Snow',
-      daysAbsent: 2,
-      today: 1,
-    },
-    {
-      id: 1,
-      name: ' Jon Snow',
-      daysAbsent: 2,
-      today: 0,
-    },
-  ]);
   return (
     <Container>
       <TeacherSubNav />

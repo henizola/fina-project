@@ -18,14 +18,21 @@ export const Container = styled.div`
     padding: 15px;
     text-align: left;
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 2fr;
     font-size: 18px;
     grid-row-gap: 25px;
   }
   .cards {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 50px;
     padding: 100px;
+  }
+  @media screen and (max-width: 700px) {
+    .cards {
+      grid-template-columns: 1fr;
+      grid-gap: 30px;
+      padding: 20px;
+    }
   }
 `;

@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, {
+  useState,
+  useEffect,
+} from 'react';
 import {
   Form,
   FormControl,
@@ -6,9 +9,68 @@ import {
 } from 'react-bootstrap';
 import TeacherSubNav from '../../../components/teacher-sub-nav/teacher-sub-nav';
 import { Container } from './post-exam-date.styles';
+import axios from 'axios';
 
 const PostExam = () => {
-  const [type, settype] = useState('');
+  const [type, settype] = useState('quiz');
+  const [date, setDate] = useState(null);
+  const [chapters, setChapters] = useState('');
+  const [grade, setGrade] = useState(null);
+
+  const [teacher, setteacher] = useState(null);
+
+  useEffect(() => {
+    console.log(localStorage.getItem('id'));
+    const login = async () => {
+      axios
+        .post(
+          'http://localhost:9000/api/get-one-teacher',
+          {
+            id: localStorage.getItem('id'),
+          }
+        )
+        .then(function (response) {
+          setteacher(response.data);
+          setGrade(
+            response.data.classToTeach[0].grade
+          );
+        })
+
+        .catch(function (error) {
+          if (error.response) {
+            alert(error.response.data.detail);
+          }
+          console.log(error);
+        })
+        .then(function () {
+          // always executed
+        });
+    };
+    login();
+  }, []);
+
+  const post = async () => {
+    axios
+      .post(
+        'http://localhost:9000/api/post-exam',
+        {
+          type: type,
+          date: date,
+          chapters: chapters,
+          grade: grade,
+          subject: teacher.subject,
+        }
+      )
+      .then(function (response) {
+        console.log(response);
+      })
+
+      .catch(function (error) {
+        if (error.response) {
+          alert(error.response.data.detail);
+        }
+      });
+  };
   return (
     <Container>
       <TeacherSubNav />
@@ -28,13 +90,33 @@ const PostExam = () => {
               }
               value={type}
             >
-              <option value="notice">Quiz</option>
-              <option value="calendar">
-                Test
-              </option>
+              <option value="quize">Quiz</option>
+              <option value="test">Test</option>
             </Form.Select>
           </InputGroup>
-
+          <InputGroup>
+            <InputGroup.Text>
+              Grade
+            </InputGroup.Text>
+            <Form.Select
+              style={{
+                width: 'calc( 100% - 145px)',
+              }}
+              onChange={(e) =>
+                setGrade(e.target.value)
+              }
+              value={type}
+            >
+              {teacher &&
+                teacher.classToTeach.map(
+                  (cls) => (
+                    <option value={cls.grade}>
+                      {cls.grade}
+                    </option>
+                  )
+                )}
+            </Form.Select>
+          </InputGroup>
           <InputGroup>
             <InputGroup.Text
               style={{ width: '100px' }}
@@ -45,6 +127,9 @@ const PostExam = () => {
             <FormControl
               aria-label="Last name"
               type="date"
+              onChange={(e) =>
+                setDate(e.target.value)
+              }
             />
           </InputGroup>
 
@@ -55,10 +140,17 @@ const PostExam = () => {
               Chapters
             </InputGroup.Text>
 
-            <FormControl aria-label="Last name" />
+            <FormControl
+              aria-label="Last name"
+              onChange={(e) =>
+                setChapters(e.target.value)
+              }
+            />
           </InputGroup>
         </div>
-        <button className="post">Post</button>
+        <button className="post" onClick={post}>
+          Post
+        </button>
       </div>
     </Container>
   );

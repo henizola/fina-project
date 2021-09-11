@@ -101,4 +101,13 @@ export const Container = styled.div`
   tfoot {
     border-bottom: 0;
   }
+  @media screen and (max-width: 700px) {
+    .table {
+      grid-template-columns: 1fr;
+    }
+    .desc {
+      margin: 0 !important;
+      padding: 0 20px !important;
+    }
+  }
 `;

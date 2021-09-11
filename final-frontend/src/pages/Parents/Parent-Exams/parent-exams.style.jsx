@@ -28,4 +28,11 @@ export const Container = styled.div`
     grid-gap: 50px;
     padding: 100px;
   }
+  @media screen and (max-width: 700px) {
+    .cards {
+      grid-template-columns: 1fr;
+      grid-gap: 30px;
+      padding: 20px;
+    }
+  }
 `;

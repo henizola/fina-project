@@ -13,18 +13,25 @@ export const Container = styled.div`
   .cont {
     display: flex;
     width: 70vw;
+    flex-direction: column;
 
     margin: 0 auto;
   }
   .left {
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 15px;
-
+    width: 100%;
     margin-top: 100px;
     padding: 0;
     height: fit-content;
+  }
+  .right-cont {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 50px;
   }
   .right {
     margin: 0 auto;
@@ -38,7 +45,6 @@ export const Container = styled.div`
     height: fit-content;
     background-color: #071928;
     border-radius: 5px;
-    margin-left: 100px;
     color: #707070 !important;
   }
   .flex {
@@ -49,7 +55,7 @@ export const Container = styled.div`
     text-align: center;
   }
   .input {
-    width: 300px;
+    width: 100%;
     height: 40px;
     padding-left: 10px;
     border: 1px solid #c9c9c9;
@@ -80,5 +86,24 @@ export const Container = styled.div`
   }
   svg {
     margin-top: 3px;
+  }
+  @media screen and (max-width: 700px) {
+    /* padding: ; */
+    .cont {
+      width: 95vw;
+      margin: 0 auto;
+      flex-direction: column;
+    }
+    .left {
+      grid-template-columns: 1fr;
+      margin: 0px 0;
+    }
+    .find {
+      margin: 0 auto;
+    }
+    .right {
+      margin: 50px 0;
+      grid-template-columns: 1fr;
+    }
   }
 `;

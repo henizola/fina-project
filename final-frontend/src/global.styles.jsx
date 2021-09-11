@@ -5,10 +5,6 @@ export const GlobalStyles = createGlobalStyle`
 body {
 	color:#071928;
 	font-family: 'Open Sans Condensed';
-	padding: 0px 0px;
-	@media screen and (max-width:800px){
-		padding:10px;
-	}
 }
 
 a {
@@ -22,6 +18,11 @@ a {
 
 h1{
 	font-weight:600;
+}
+@media screen and (max-width:700px){
+	h1{
+		margin-top:10px!important;
+	}
 }
 
 `;

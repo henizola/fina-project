@@ -38,7 +38,10 @@ const TeacherSubNav = () => {
           history.push('/');
         }}
       >
-        <option>Logged in as : Teacher</option>
+        <option>
+          Logged in as :{' '}
+          {localStorage.getItem('userName')}
+        </option>
         <option>Log Out</option>
       </Form.Select>
       <BsBellFill />

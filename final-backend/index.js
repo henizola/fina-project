@@ -10,6 +10,10 @@ const app = express();
 const systemAdmin = require('./route/system-admin');
 const student = require('./route/student');
 
+const attendance = require('./route/attendance');
+const teachers = require('./route/teachers');
+const exams = require('./route/exams');
+
 app.use(cors());
 app.use(cookieParser());
 
@@ -35,6 +39,9 @@ app.use(express.json());
 
 app.use('/api', systemAdmin);
 app.use('/api', student);
+app.use('/api', attendance);
+app.use('/api', teachers);
+app.use('/api', exams);
 
 const port = process.env.PORT || 9000;
 app.listen(port, () =>

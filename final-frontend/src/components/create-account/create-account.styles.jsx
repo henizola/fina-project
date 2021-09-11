@@ -12,9 +12,10 @@ export const Container = styled.div`
     width: fit-content;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 100px 1fr;
-    grid-row-gap: 20px;
+    grid-template-columns: 100px 1fr 130px 1fr;
+    grid-gap: 20px;
     margin-top: 50px;
+    text-align: right;
   }
   .input {
     width: 200px;

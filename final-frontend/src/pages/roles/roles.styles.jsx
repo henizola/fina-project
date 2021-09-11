@@ -51,4 +51,17 @@ export const Container = styled.div`
   .role:hover {
     transform: scale(1.05);
   }
+  @media screen and (max-width: 700px) {
+    max-height: fit-content;
+    max-width: 100vw;
+    overflow-x: hidden;
+    grid-template-rows: 105px 100px 1fr;
+    .roles-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-gap: 50px;
+      height: 100%;
+      padding: 20px 0px;
+    }
+  }
 `;

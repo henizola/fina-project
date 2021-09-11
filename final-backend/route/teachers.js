@@ -29,8 +29,8 @@ var transporter = nodemailer.createTransport({
 });
 
 app.use(express.json());
-const Student = new mongoose.model(
-  'Student',
+const Teacher = new mongoose.model(
+  'Teacher',
   new mongoose.Schema({
     email: {
       type: String,
@@ -53,30 +53,6 @@ const Student = new mongoose.model(
       type: String,
       required: true,
     },
-    parents: {
-      father: {
-        fullName: {
-          type: String,
-        },
-        email: {
-          type: String,
-        },
-        Phone: {
-          type: Number,
-        },
-      },
-      mother: {
-        fullName: {
-          type: String,
-        },
-        email: {
-          type: String,
-        },
-        Phone: {
-          type: Number,
-        },
-      },
-    },
     lastName: {
       type: String,
       required: true,
@@ -84,45 +60,31 @@ const Student = new mongoose.model(
     id: {
       type: Number,
     },
-    currentGrade: {
-      type: Number,
-      maxlength: 2,
-      default: 0,
+    homeRoom: {
+      type: Array,
+      maxlength: 1,
     },
-    currentSection: {
-      type: String,
-      maxlength: 2,
-      default: '',
-    },
+
     phone: {
       type: String,
       required: true,
     },
-    class: {
+    classToTeach: {
+      type: Array,
+    },
+    subject: {
       type: String,
-    },
-    section: {
-      type: String,
-      maxlength: 2,
-    },
-    attendance: {
-      type: Array,
-    },
-    markList: {
-      type: Array,
-    },
-    gradeArchive: {
-      type: Array,
     },
   })
 );
 
-const studentSchema = Joi.object({
+const teacherSchema = Joi.object({
   email: Joi.string().required(),
   firstName: Joi.string().required(),
   middleName: Joi.string().required(),
   lastName: Joi.string().required(),
   phone: Joi.string().required(),
+  subject: Joi.string().required(),
 });
 
 const storage = multer.diskStorage({
@@ -139,13 +101,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.post(
-  '/create-student',
+  '/create-teacher',
   // admin,
   async (req, res) => {
-    let { error } = studentSchema.validate(
+    let { error } = teacherSchema.validate(
       req.body
     );
-    console.log(req);
     const fullName =
       req.body.firstName + req.body.lastName;
 
@@ -157,11 +118,11 @@ app.post(
     }
 
     let found = false;
-    const clientcheck = await Student.find();
-    clientcheck.forEach((student) => {
+    const clientcheck = await Teacher.find();
+    clientcheck.forEach((teacher) => {
       if (
-        student.email === req.body.email ||
-        student.phone === req.body.phone
+        teacher.email === req.body.email ||
+        teacher.phone === req.body.phone
       ) {
         found = true;
         return;
@@ -180,33 +141,26 @@ app.post(
     }@1234`;
     password = await bcrypt.hash(password, salt);
 
-    const lastStudent = await Student.find()
+    const lastTeacher = await Teacher.find()
       .limit(1)
       .sort({ $natural: -1 });
     let id = 4231;
 
-    if (lastStudent.length) {
-      const lastStudent = await Student.find()
+    if (lastTeacher.length) {
+      const lastTeacher = await Teacher.find()
         .limit(1)
         .sort({ $natural: -1 });
-      console.log(lastStudent.id);
     }
 
-    const student = new Student({
+    const teacher = new Teacher({
       email: req.body.email,
       password: password,
-      firstName: req.body.firstName.toLowerCase(),
-      middleName:
-        req.body.middleName.toLowerCase(),
-      lastName: req.body.lastName.toLowerCase(),
+      firstName: req.body.firstName,
+      middleName: req.body.middleName,
+      lastName: req.body.lastName,
       phone: req.body.phone,
       id: id,
-      attendance: [
-        {
-          date: new Date(),
-          remark: 'absent',
-        },
-      ],
+      subject: req.body.subject,
     });
 
     var mailOptions = {
@@ -217,7 +171,7 @@ app.post(
         req.body.firstName +
         ' ' +
         req.body.lastName
-      } Wellcome to Cambridge Academy Ethiopia your Student Id is CAM${id}  to activate your account please sign in using your email your default password is ${
+      } Wellcome to Cambridge Academy Ethiopia your Teacher Id is CAM${id}  to activate your account please sign in using your email your default password is ${
         firstName +
         lastName.replace(/\s+/g, '').toLowerCase()
       }@1234`,
@@ -236,13 +190,13 @@ app.post(
       }
     );
 
-    const result = await student.save();
+    const result = await teacher.save();
     res.status(200).send(result);
   }
 );
 
-app.post('/student-sign-in', async (req, res) => {
-  const user = await Student.findOne({
+app.post('/teacher-sign-in', async (req, res) => {
+  const user = await Teacher.findOne({
     email: req.body.email,
   });
 
@@ -251,7 +205,6 @@ app.post('/student-sign-in', async (req, res) => {
       .status(400)
       .send('user name or password not correct');
   }
-  console.log(req.body);
 
   const validPassword = await bcrypt.compare(
     req.body.password,
@@ -269,7 +222,7 @@ app.post('/student-sign-in', async (req, res) => {
       token: token,
       role: user.role,
       id: user._id,
-      userName: user.userName,
+      userName: `${user.firstName} ${user.lastName}`,
     };
     res.send(resp);
   } else {
@@ -279,15 +232,77 @@ app.post('/student-sign-in', async (req, res) => {
   }
 });
 
-app.post('/find-student', async (req, res) => {
-  const user = await Student.find();
+app.post('/get-teachers', async (req, res) => {
+  const user = await Teacher.find();
 
   if (!user) {
     return res
       .status(400)
-      .send('No Student Found');
+      .send('No Teacher Available');
   }
   res.status(200).send(user);
 });
+app.post('/get-one-teacher', async (req, res) => {
+  const user = await Teacher.findOne({
+    _id: req.body.id,
+  });
+
+  if (!user) {
+    return res
+      .status(400)
+      .send('No Teacher Available');
+  }
+  res.status(200).send(user);
+});
+
+app.post(
+  '/assign-teacher-class',
+  async (req, res) => {
+    let teacher = await Teacher.updateOne(
+      {
+        _id: req.body.id,
+      },
+      {
+        $push: {
+          classToTeach: {
+            grade: req.body.grade,
+            section: req.body.section,
+          },
+        },
+      }
+    );
+    if (teacher.nModified) {
+      res.send(teacher);
+    } else {
+      res.status(500).send('Error server error');
+    }
+  }
+);
+
+app.post(
+  '/assign-homeroom-teacher',
+  async (req, res) => {
+    const grade = `${req.body.grade} ${req.body.section}`;
+    let teacher = await Teacher.updateOne(
+      {
+        _id: req.body.id,
+      },
+      {
+        $push: {
+          homeRoom: {
+            grade: grade,
+          },
+        },
+      }
+    );
+    if (teacher.nModified) {
+      res.send(teacher);
+    } else {
+      res.status(500).send('Error server error');
+    }
+
+    res.status(200).send(user);
+  }
+);
 
 module.exports = app;

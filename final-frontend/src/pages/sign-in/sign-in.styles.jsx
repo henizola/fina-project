@@ -12,10 +12,13 @@ export const Container = styled.div`
     height: 100%;
     margin: 50px auto;
   }
+  @media screen and (max-width: 700px) {
+    grid-template-rows: 150px 1fr;
+  }
 `;
 
 export const FormContainer = styled.div`
-  width: 50vw;
+  width: 30vw;
   height: 50%;
   margin: 150px auto;
   .input {
@@ -37,9 +40,22 @@ export const FormContainer = styled.div`
     padding: 10px 70px;
 
     border: none;
-    margin-left: 38%;
+    margin-left: 8%;
     border-radius: 3px;
     color: #f79e01;
     font-size: 20px;
+  }
+
+  .default {
+    margin-left: 47%;
+    transform: translateX(-50%);
+  }
+  .input {
+    width: 80%;
+  }
+  @media screen and (max-width: 700px) {
+    width: 100vw;
+    height: 50%;
+    margin: 100px auto;
   }
 `;
