@@ -44,6 +44,7 @@ const ParentSubNav = () => {
         }}
         onChange={(e) => {
           e.preventDefault();
+          localStorage.clear();
           history.push('/');
         }}
       >

@@ -35,6 +35,7 @@ const AdminSubNav = () => {
         }}
         onChange={(e) => {
           e.preventDefault();
+          localStorage.clear();
           history.push('/');
         }}
       >

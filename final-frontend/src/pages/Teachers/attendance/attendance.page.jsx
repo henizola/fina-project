@@ -5,15 +5,27 @@ import {
   default as React,
   useState,
   useEffect,
+  useContext,
 } from 'react';
 import TeacherSubNav from '../../../components/teacher-sub-nav/teacher-sub-nav';
 import { Container } from './attendance.styles';
 
 import axios from 'axios';
 
+import { UserContext } from '../../../context/user.context';
+
 const Attendance = () => {
   const [data, setData] = useState([]);
   let combination = [];
+
+  const { user } = useContext(UserContext);
+
+  // var patt2 = /[a-zA-Z]/g;
+
+  // console.log(
+  //   user.homeRoom[0].grade.match(patt2)[0],
+  //   'jhsgdfjkasgdjfhgs'
+  // );
 
   useEffect(() => {
     const login = async () => {
@@ -21,8 +33,12 @@ const Attendance = () => {
         .post(
           'http://localhost:9000/api/get-attendance',
           {
-            grade: 7,
-            section: ' B ',
+            grade: JSON.parse(
+              localStorage.getItem('user')
+            ).homeRoom[0].grade,
+            section: JSON.parse(
+              localStorage.getItem('user')
+            ).homeRoom[0].section,
           }
         )
         .then(function (response) {

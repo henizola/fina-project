@@ -35,12 +35,17 @@ const TeacherSubNav = () => {
         }}
         onChange={(e) => {
           e.preventDefault();
+          localStorage.clear();
           history.push('/');
         }}
       >
         <option>
           Logged in as :{' '}
-          {localStorage.getItem('userName')}
+          {
+            JSON.parse(
+              localStorage.getItem('user')
+            ).email
+          }
         </option>
         <option>Log Out</option>
       </Form.Select>

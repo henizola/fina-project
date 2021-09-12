@@ -37,10 +37,18 @@ const PrincipalSubNav = () => {
         }}
         onChange={(e) => {
           e.preventDefault();
+          localStorage.clear();
           history.push('/');
         }}
       >
-        <option>Logged in as : Principal</option>
+        <option>
+          Logged in as :{' '}
+          {
+            JSON.parse(
+              localStorage.getItem('user')
+            ).email
+          }
+        </option>
         <option>Log Out</option>
       </Form.Select>
       <BsBellFill />

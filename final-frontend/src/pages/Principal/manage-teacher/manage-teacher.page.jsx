@@ -23,7 +23,7 @@ const ManageTeacher = () => {
           'http://localhost:9000/api/get-teachers'
         )
         .then(function (response) {
-          console.log(response.data);
+          setTeachers(response.data);
 
           const teachers = [];
 
@@ -50,7 +50,7 @@ const ManageTeacher = () => {
             });
           });
 
-          setTeachers(teachers);
+          setTeachers(response.data);
         })
         .catch(function (error) {
           console.log(error);

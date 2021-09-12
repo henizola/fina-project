@@ -199,6 +199,7 @@ app.post('/teacher-sign-in', async (req, res) => {
   const user = await Teacher.findOne({
     email: req.body.email,
   });
+  console.log(user);
 
   if (!user) {
     return res
@@ -223,6 +224,7 @@ app.post('/teacher-sign-in', async (req, res) => {
       role: user.role,
       id: user._id,
       userName: `${user.firstName} ${user.lastName}`,
+      user: user,
     };
     res.send(resp);
   } else {
@@ -282,7 +284,6 @@ app.post(
 app.post(
   '/assign-homeroom-teacher',
   async (req, res) => {
-    const grade = `${req.body.grade} ${req.body.section}`;
     let teacher = await Teacher.updateOne(
       {
         _id: req.body.id,
@@ -290,7 +291,8 @@ app.post(
       {
         $push: {
           homeRoom: {
-            grade: grade,
+            grade: req.body.grade,
+            section: req.body.section,
           },
         },
       }

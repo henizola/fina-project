@@ -13,6 +13,7 @@ const student = require('./route/student');
 const attendance = require('./route/attendance');
 const teachers = require('./route/teachers');
 const exams = require('./route/exams');
+const principal = require('./route/principal');
 
 app.use(cors());
 app.use(cookieParser());
@@ -42,6 +43,7 @@ app.use('/api', student);
 app.use('/api', attendance);
 app.use('/api', teachers);
 app.use('/api', exams);
+app.use('/api', principal);
 
 const port = process.env.PORT || 9000;
 app.listen(port, () =>

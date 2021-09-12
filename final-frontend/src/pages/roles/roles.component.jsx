@@ -51,10 +51,7 @@ const Roles = () => {
           />
           <h1 className="role-name">Teachers</h1>
         </Link>
-        <Link
-          to="/sign-in/stuff"
-          className="role"
-        >
+        <Link to="/staff" className="role">
           <img
             src={stuff}
             alt="parent"

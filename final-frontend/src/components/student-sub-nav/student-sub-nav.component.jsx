@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import {
   Link,
@@ -9,9 +9,13 @@ import Nav from '../Nav/Nav.component';
 import { BsBellFill } from 'react-icons/bs';
 
 import { Form } from 'react-bootstrap';
+import { UserContext } from '../../context/user.context';
 
 const StudentSubNav = () => {
   const history = useHistory();
+
+  const { user } = useContext(UserContext);
+
   return (
     <Nav role={'System Admin'}>
       <Link to="/student-attendance">
@@ -41,11 +45,17 @@ const StudentSubNav = () => {
         }}
         onChange={(e) => {
           e.preventDefault();
+          localStorage.clear();
           history.push('/');
         }}
       >
         <option>
-          Logged in as : System Admin
+          Logged in as :{' '}
+          {
+            JSON.parse(
+              localStorage.getItem('user')
+            ).email
+          }
         </option>
         <option>Log Out</option>
       </Form.Select>

@@ -1,5 +1,8 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, {
+  useState,
+  useContext,
+} from 'react';
 import {
   useParams,
   useHistory,
@@ -10,9 +13,13 @@ import {
   FormContainer,
 } from './sign-in.styles';
 
+import { UserContext } from '../../context/user.context';
+
 const SignIn = () => {
   const { role } = useParams();
   console.log(role);
+
+  const { setUser } = useContext(UserContext);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,40 +30,44 @@ const SignIn = () => {
     let link = '';
     role === 'student'
       ? (link = '/student-sign-in')
-      : (link = '/teacher-sign-in');
+      : role === 'teachers'
+      ? (link = '/teacher-sign-in')
+      : role === 'parent'
+      ? (link = '/parent-sign-in')
+      : role === 'principal'
+      ? (link = '/principal-sign-in')
+      : (link = '/admin-sign-in');
+
     axios
       .post(`http://localhost:9000/api/${link}`, {
         email: email,
         password: password,
       })
       .then(function (response) {
+        console.log('reacived response');
         setWrong(false);
         localStorage.setItem(
           'token',
           response.data.token
         );
+
         localStorage.setItem(
-          'id',
-          response.data.id
+          'user',
+          JSON.stringify(response.data.user)
         );
-        localStorage.setItem(
-          'userName',
-          response.data.userName
-        );
-        console.log(response.data);
+        setUser(response.data.user);
         if (role === 'student') {
           history.push('/student-attendance');
         } else if (role === 'teachers') {
           history.push('/attendance');
+        } else if (role === 'principal') {
+          history.push('/manage-teachers');
         }
       })
 
       .catch(function (error) {
         setWrong(true);
-      })
-      .then(
-        console.log(localStorage.getItem('token'))
-      );
+      });
   };
   return (
     <Container>
@@ -80,7 +91,7 @@ const SignIn = () => {
           }}
         />
         <input
-          type="text"
+          type="password"
           className="input"
           placeholder="Password"
           onChange={(e) =>

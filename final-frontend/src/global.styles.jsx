@@ -25,6 +25,10 @@ h1{
 	}
 }
 
+select option{
+	text-transform: capitalize;
+}
+
 `;
 
 export const Container = styled.div``;

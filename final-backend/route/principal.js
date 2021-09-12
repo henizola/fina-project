@@ -29,8 +29,8 @@ var transporter = nodemailer.createTransport({
 });
 
 app.use(express.json());
-const Student = new mongoose.model(
-  'Student',
+const Principal = new mongoose.model(
+  'Principal',
   new mongoose.Schema({
     email: {
       type: String,
@@ -53,71 +53,15 @@ const Student = new mongoose.model(
       type: String,
       required: true,
     },
-    parents: {
-      father: {
-        fullName: {
-          type: String,
-        },
-        email: {
-          type: String,
-        },
-        Phone: {
-          type: Number,
-        },
-      },
-      mother: {
-        fullName: {
-          type: String,
-        },
-        email: {
-          type: String,
-        },
-        Phone: {
-          type: Number,
-        },
-      },
-    },
+
     lastName: {
       type: String,
       required: true,
     },
-    id: {
-      type: Number,
-    },
-    currentGrade: {
-      type: Number,
-      maxlength: 2,
-      default: 0,
-    },
-    currentSection: {
-      type: String,
-      maxlength: 2,
-      default: '',
-    },
-    phone: {
-      type: String,
-      required: true,
-    },
-    class: {
-      type: String,
-    },
-    section: {
-      type: String,
-      maxlength: 2,
-    },
-    attendance: {
-      type: Array,
-    },
-    markList: {
-      type: Array,
-    },
-    gradeArchive: {
-      type: Array,
-    },
   })
 );
 
-const studentSchema = Joi.object({
+const principalSchema = Joi.object({
   email: Joi.string().required(),
   firstName: Joi.string().required(),
   middleName: Joi.string().required(),
@@ -125,24 +69,11 @@ const studentSchema = Joi.object({
   phone: Joi.string().required(),
 });
 
-const storage = multer.diskStorage({
-  destination: function (req, res, cb) {
-    cb(null, path.join(__dirname, '..', 'docs'));
-  },
-  filename: function (req, file, cb) {
-    const now = new Date().toISOString();
-    const date = now.replace(/:/g, '-');
-    cb(null, date + file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
-
 app.post(
-  '/create-student',
+  '/create-principal',
   // admin,
   async (req, res) => {
-    let { error } = studentSchema.validate(
+    let { error } = principalSchema.validate(
       req.body
     );
     console.log(req);
@@ -157,11 +88,11 @@ app.post(
     }
 
     let found = false;
-    const clientcheck = await Student.find();
-    clientcheck.forEach((student) => {
+    const clientcheck = await Principal.find();
+    clientcheck.forEach((principal) => {
       if (
-        student.email === req.body.email ||
-        student.phone === req.body.phone
+        principal.email === req.body.email ||
+        principal.phone === req.body.phone
       ) {
         found = true;
         return;
@@ -180,19 +111,14 @@ app.post(
     }@1234`;
     password = await bcrypt.hash(password, salt);
 
-    const lastStudent = await Student.find()
-      .limit(1)
-      .sort({ $natural: -1 });
-    let id = 4231;
-
-    if (lastStudent.length) {
-      const lastStudent = await Student.find()
+    if (lastPrincipal.length) {
+      const lastPrincipal = await Principal.find()
         .limit(1)
         .sort({ $natural: -1 });
-      console.log(lastStudent.id);
+      console.log(lastPrincipal.id);
     }
 
-    const student = new Student({
+    const principal = new Principal({
       email: req.body.email,
       password: password,
       firstName: req.body.firstName.toLowerCase(),
@@ -200,13 +126,6 @@ app.post(
         req.body.middleName.toLowerCase(),
       lastName: req.body.lastName.toLowerCase(),
       phone: req.body.phone,
-      id: id,
-      attendance: [
-        {
-          date: new Date(),
-          remark: 'absent',
-        },
-      ],
     });
 
     var mailOptions = {
@@ -217,7 +136,7 @@ app.post(
         req.body.firstName +
         ' ' +
         req.body.lastName
-      } Wellcome to Cambridge Academy Ethiopia your Student Id is CAM${id}  to activate your account please sign in using your email your default password is ${
+      } Wellcome to Cambridge Academy Ethiopia  to activate your account please sign in using your email your default password is ${
         firstName +
         lastName.replace(/\s+/g, '').toLowerCase()
       }@1234`,
@@ -236,62 +155,69 @@ app.post(
       }
     );
 
-    const result = await student.save();
+    const result = await principal.save();
     res.status(200).send(result);
   }
 );
 
-app.post('/student-sign-in', async (req, res) => {
-  const user = await Student.findOne({
-    email: req.body.email,
-  });
+app.post(
+  '/principal-sign-in',
+  async (req, res) => {
+    const user = await Principal.findOne({
+      email: req.body.email,
+    });
 
-  if (!user) {
-    return res
-      .status(400)
-      .send('user name or password not correct');
-  }
-  console.log(req.body);
+    if (!user) {
+      return res
+        .status(400)
+        .send(
+          'user name or password not correct'
+        );
+    }
+    console.log(req.body);
 
-  const validPassword = await bcrypt.compare(
-    req.body.password,
-    user.password
-  );
-  if (validPassword) {
-    const token = jwt.sign(
-      {
-        id: user._id.toString(),
-        role: user.role,
-      },
-      process.env.JWT_SECRET
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
     );
-    const resp = {
-      token: token,
-      user: user,
-    };
-    res.send(resp);
-  } else {
-    res
-      .status(500)
-      .send('user name or password not correct');
+    if (validPassword) {
+      const token = jwt.sign(
+        {
+          id: user._id.toString(),
+          role: user.role,
+        },
+        process.env.JWT_SECRET
+      );
+      const resp = {
+        token: token,
+        user: user,
+      };
+      res.send(resp);
+    } else {
+      res
+        .status(500)
+        .send(
+          'user name or password not correct'
+        );
+    }
   }
-});
+);
 
-app.post('/find-student', async (req, res) => {
-  const user = await Student.find();
+app.post('/find-principal', async (req, res) => {
+  const user = await Principal.find();
 
   if (!user) {
     return res
       .status(400)
-      .send('No Student Found');
+      .send('No Principal Found');
   }
   res.status(200).send(user);
 });
 
 app.post(
-  '/get-students-grade',
+  '/get-principals-grade',
   async (req, res) => {
-    const user = await Student.find({
+    const user = await Principal.find({
       currentGrade: req.body.currentGrade,
       currentSection: req.body.currentSection,
     });
@@ -299,7 +225,7 @@ app.post(
     if (!user) {
       return res
         .status(400)
-        .send('No Student Found');
+        .send('No Principal Found');
     }
     res.status(200).send(user);
   }

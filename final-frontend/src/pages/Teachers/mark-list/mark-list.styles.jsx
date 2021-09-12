@@ -81,4 +81,10 @@ export const Container = styled.div`
   tfoot {
     border-bottom: 0;
   }
+  .flex {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 30%;
+    margin: 0 auto;
+  }
 `;

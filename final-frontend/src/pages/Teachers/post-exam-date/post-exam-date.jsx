@@ -1,6 +1,7 @@
 import React, {
   useState,
   useEffect,
+  useContext,
 } from 'react';
 import {
   Form,
@@ -11,6 +12,8 @@ import TeacherSubNav from '../../../components/teacher-sub-nav/teacher-sub-nav';
 import { Container } from './post-exam-date.styles';
 import axios from 'axios';
 
+import { UserContext } from '../../../context/user.context';
+
 const PostExam = () => {
   const [type, settype] = useState('quiz');
   const [date, setDate] = useState(null);
@@ -19,14 +22,17 @@ const PostExam = () => {
 
   const [teacher, setteacher] = useState(null);
 
+  const { user } = useContext(UserContext);
+
   useEffect(() => {
-    console.log(localStorage.getItem('id'));
     const login = async () => {
       axios
         .post(
           'http://localhost:9000/api/get-one-teacher',
           {
-            id: localStorage.getItem('id'),
+            id: JSON.parse(
+              localStorage.getItem('user')
+            )._id,
           }
         )
         .then(function (response) {
@@ -47,6 +53,7 @@ const PostExam = () => {
         });
     };
     login();
+    console.log(user, 'kkkkkk');
   }, []);
 
   const post = async () => {
@@ -107,14 +114,16 @@ const PostExam = () => {
               }
               value={type}
             >
-              {teacher &&
-                teacher.classToTeach.map(
-                  (cls) => (
-                    <option value={cls.grade}>
-                      {cls.grade}
-                    </option>
-                  )
-                )}
+              {JSON.parse(
+                localStorage.getItem('user')
+              ) &&
+                JSON.parse(
+                  localStorage.getItem('user')
+                ).classToTeach.map((cls) => (
+                  <option value={cls.grade}>
+                    {cls.grade}
+                  </option>
+                ))}
             </Form.Select>
           </InputGroup>
           <InputGroup>
