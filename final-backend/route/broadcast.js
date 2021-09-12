@@ -40,16 +40,17 @@ const BroadCast = new mongoose.model(
       type: String,
       required: true,
     },
+    date: {
+      type: Date,
+    },
+    description: {
+      type: String,
+    },
   })
 );
 
 const broadCastSchema = Joi.object({
-  firstName: Joi.string().required(),
-  middleName: Joi.string().required(),
-  lastName: Joi.string().required(),
-  id: Joi.number().required(),
-  grade: Joi.number().required(),
-  section: Joi.string().required(),
+  type: Joi.string().required(),
 });
 
 const storage = multer.diskStorage({
@@ -66,66 +67,41 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.post(
-  '/insert-student',
+  '/broadcast',
+  upload.single('file'),
   // admin,
   async (req, res) => {
     let { error } = broadCastSchema.validate(
       req.body
     );
-    console.log(req.body);
-
-    if (error) {
-      res.send(error.details[0].message);
+    if (!req.file) {
+      return res.status(400).send('bad request');
     }
 
-    let found = false;
-    const clientcheck = await BroadCast.find();
-    clientcheck.forEach((broadCast) => {
-      if (broadCast.id === req.body.id) {
-        found = true;
-        return;
-      }
+    const ad = new BroadCast({
+      file: req.file.filename,
+      type: req.body.type,
+      date: req.body.date,
+      description: req.body.description,
     });
-
-    if (found)
-      return res
-        .status(500)
-        .send('student alredy in the database ');
-
-    const broadCast = new BroadCast({
-      firstName: req.body.firstName,
-      middleName: req.body.middleName,
-      lastName: req.body.lastName,
-      grade: req.body.grade,
-      id: req.body.id,
-      broadCast: [
-        {
-          date: new Date()
-            .toString()
-            .substring(0, 10),
-          remark: 'A',
-        },
-      ],
-      section: req.body.section,
-    });
-
-    const result = await broadCast.save();
-    res.status(200).send(result);
+    const result = await ad.save();
+    res.send(result);
   }
 );
+app.post(
+  '/get-school-calendar',
+  async (req, res) => {
+    const doc = await BroadCast.find({
+      type: 'school Calendar',
+    });
 
-app.post('/get-broadCast', async (req, res) => {
-  const students = await BroadCast.find({
-    grade: req.body.grade,
-    section: req.body.section,
-  });
-
-  if (!students) {
-    return res
-      .status(400)
-      .send('No Result Found');
+    if (!doc) {
+      return res
+        .status(400)
+        .send('No Result Found');
+    }
+    res.status(200).send(doc);
   }
-  res.status(200).send(students);
-});
+);
 
 module.exports = app;
