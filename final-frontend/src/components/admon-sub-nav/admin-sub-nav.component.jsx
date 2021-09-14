@@ -40,7 +40,12 @@ const AdminSubNav = () => {
         }}
       >
         <option>
-          Logged in as : System Admin
+          Logged in as :{' '}
+          {
+            JSON.parse(
+              localStorage.getItem('user')
+            ).email
+          }{' '}
         </option>
         <option>Log Out</option>
       </Form.Select>

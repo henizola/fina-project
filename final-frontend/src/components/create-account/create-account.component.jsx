@@ -9,7 +9,10 @@ import axios from 'axios';
 import AlertModal from '../alert modal/alertModal';
 
 import { useHistory } from 'react-router-dom';
-const CreateAccount = ({ type }, props) => {
+const CreateAccount = (
+  { type, onNext, onPrev },
+  props
+) => {
   const history = useHistory();
   const [firstName, setfirstName] = useState('');
   const [middleName, setmiddleName] =
@@ -24,8 +27,9 @@ const CreateAccount = ({ type }, props) => {
   const handleClose = () => {
     setShow(false);
   };
-
+  console.log(type);
   const save = (e) => {
+    onNext();
     e.preventDefault();
     switch (type) {
       case 'Teachers':
@@ -52,6 +56,29 @@ const CreateAccount = ({ type }, props) => {
           .then(function () {});
 
         break;
+      case 'System Admin':
+        axios
+          .post(
+            'http://localhost:9000/api/create-system-admin',
+            {
+              firstName: firstName,
+              middleName: middleName,
+              lastName: lastName,
+              phone: phone,
+              email: email,
+            }
+          )
+          .then(function (response) {
+            history.push('/manage-teachers');
+          })
+          .catch(function (error) {
+            setShow(true);
+
+            setAlert(error.response.data);
+          })
+          .then(function () {});
+
+        break;
 
       default:
       // code block
@@ -59,8 +86,18 @@ const CreateAccount = ({ type }, props) => {
   };
 
   return (
-    <Container>
-      <h1>Create Profile for {type}</h1>
+    <Container
+      style={{
+        margin: `${
+          type !== 'student' ||
+          (type !== 'parents' && '30px auto')
+        }`,
+      }}
+    >
+      {type !== 'student' &&
+        type !== 'parents' && (
+          <h1>Create Profile for {type}</h1>
+        )}
       <IoMdContact
         style={{ fontSize: '100px' }}
       />

@@ -10,15 +10,69 @@ import {
 
 import PrincipalSubNav from '../../../components/principal-subnav/principal-subnav';
 
+import axios from 'axios';
+
 const PostCalendar = () => {
   const [type, settype] = useState('');
+  const [date, setDate] = useState();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] =
+    useState('');
+  const [file, setFile] = useState(null);
+
+  const post = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('date', date);
+    formData.append('type', type);
+    formData.append('description', description);
+    formData.append('title', title);
+    console.log(title, 'he');
+    switch (type) {
+      case 'notice' && 'calendar':
+        axios
+          .post(
+            'http://localhost:9000/api/broadcast',
+            formData
+          )
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .then(function () {});
+
+        break;
+      case 'event':
+        axios
+          .post(
+            'http://localhost:9000/api/add-event',
+            formData
+          )
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
+          .then(function () {});
+
+        break;
+
+      default:
+      // code block
+    }
+  };
+
   return (
     <Container>
       <PrincipalSubNav />
       <div className="container">
         <h1>Broadcast</h1>
         <div className="upload">
-          <Form.Control type="file" size="ls" />
           <InputGroup>
             <InputGroup.Text>
               Notice Type
@@ -47,12 +101,39 @@ const PostCalendar = () => {
               <InputGroup.Text
                 style={{ width: '100px' }}
               >
+                Title
+              </InputGroup.Text>
+
+              <FormControl
+                aria-label="Last name"
+                onChange={(e) =>
+                  setTitle(e.target.value)
+                }
+              />
+            </InputGroup>
+          )}
+          <Form.Control
+            type="file"
+            size="ls"
+            onChange={(e) =>
+              setFile(e.target.files[0])
+            }
+          />
+
+          {type === 'event' && (
+            <InputGroup>
+              <InputGroup.Text
+                style={{ width: '100px' }}
+              >
                 Date
               </InputGroup.Text>
 
               <FormControl
                 aria-label="Last name"
                 type="date"
+                onChange={(e) =>
+                  setDate(e.target.value)
+                }
               />
             </InputGroup>
           )}
@@ -64,11 +145,18 @@ const PostCalendar = () => {
                 Description
               </InputGroup.Text>
 
-              <FormControl aria-label="Last name" />
+              <FormControl
+                aria-label="Last name"
+                onChange={(e) =>
+                  setDescription(e.target.value)
+                }
+              />
             </InputGroup>
           )}
         </div>
-        <button className="post">Post</button>
+        <button className="post" onClick={post}>
+          Post
+        </button>
       </div>
     </Container>
   );

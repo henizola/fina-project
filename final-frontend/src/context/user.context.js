@@ -6,18 +6,37 @@ import React, {
 export const UserContext = createContext();
 
 export const UserProvider = (props) => {
-  const [user, setUser] = useState(null);
-
-  const log = (s) => {
-    console.log(s, user);
-  };
+  const [student, setStudent] = useState({
+    firstName: 'g',
+    lastName: '',
+    middleName: '',
+    phone: '',
+    email: '',
+  });
+  const [mother, setMother] = useState({
+    firstName: '',
+    lastName: '',
+    middleName: '',
+    phone: '',
+    email: '',
+  });
+  const [father, setFather] = useState({
+    firstName: '',
+    lastName: '',
+    middleName: '',
+    phone: '',
+    email: '',
+  });
 
   return (
     <UserContext.Provider
       value={{
-        log: log,
-        setUser: setUser,
-        user: user,
+        student: student,
+        setStudent: setStudent,
+        mother: mother,
+        setMother: setMother,
+        father: father,
+        setFather: setFather,
       }}
     >
       {props.children}

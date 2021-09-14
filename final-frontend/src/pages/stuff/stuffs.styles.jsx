@@ -30,7 +30,7 @@ export const Container = styled.div`
   }
   .role {
     height: 200px;
-    width: 100%;
+    width: 120%;
     /* background-color: white; */
 
     border-radius: 20px;

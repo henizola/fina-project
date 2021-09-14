@@ -62,6 +62,8 @@ const SignIn = () => {
           history.push('/attendance');
         } else if (role === 'principal') {
           history.push('/manage-teachers');
+        } else if (role === 'system-admin') {
+          history.push('/Create-profile');
         }
       })
 

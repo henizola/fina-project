@@ -22,6 +22,7 @@ const StudentSubNav = () => {
           'http://localhost:9000/api/get-school-calendar'
         )
         .then(function (response) {
+          console.log('chaw', response.data);
           setFile(
             `http://localhost:9000/${response.data[0].file}`
           );

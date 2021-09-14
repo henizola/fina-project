@@ -15,6 +15,7 @@ const teachers = require('./route/teachers');
 const exams = require('./route/exams');
 const principal = require('./route/principal');
 const broadcast = require('./route/broadcast');
+const register = require('./route/register');
 
 app.use(cors());
 app.use(cookieParser());
@@ -46,6 +47,7 @@ app.use('/api', teachers);
 app.use('/api', exams);
 app.use('/api', principal);
 app.use('/api', broadcast);
+app.use('/api', register);
 
 const port = process.env.PORT || 9000;
 app.listen(port, () =>

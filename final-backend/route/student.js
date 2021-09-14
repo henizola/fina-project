@@ -204,7 +204,7 @@ app.post(
       attendance: [
         {
           date: new Date(),
-          remark: 'absent',
+          remark: '',
         },
       ],
     });

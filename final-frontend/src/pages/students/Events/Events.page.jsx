@@ -1,13 +1,40 @@
 import {
   default as React,
   useState,
+  useEffect,
 } from 'react';
 import StudentSubNav from '../../../components/student-sub-nav/student-sub-nav.component';
 
 import { Container } from './Events.styles';
-
+import axios from 'axios';
 const Events = () => {
   const [filterd, setFilterd] = useState([]);
+
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+    const login = async () => {
+      axios
+        .post(
+          'http://localhost:9000/api/get-events'
+        )
+        .then(function (response) {
+          setEvents(response.data);
+        })
+
+        .catch(function (error) {
+          if (error.response) {
+            console.login(
+              error.response.data.detail
+            );
+          }
+        })
+        .then(function () {
+          // always executed
+        });
+    };
+    login();
+  }, []);
+
   var today = new Date();
   var dd = String(today.getDate()).padStart(
     2,
@@ -134,7 +161,19 @@ const Events = () => {
       <StudentSubNav />
       <h1>Upcoming Events</h1>
       <div className="cards">
-        <div className="card">
+        {events.map((event) => (
+          <div className="card">
+            <span>Title :</span>
+            <span>{event.title}</span>
+            <span>Description :</span>
+            <span>{event.description}</span>
+            <span>Date : </span>
+            <span>
+              {event.date.substring(0, 10)}
+            </span>
+          </div>
+        ))}
+        {/* <div className="card">
           <span>Title :</span>
           <span>Educational trip to Tecno</span>
           <span>Description :</span>
@@ -214,8 +253,8 @@ const Events = () => {
           <span>Date : </span>
           <span>12/05/2021</span>
         </div>
-        <div className="card">
-          <span>Title :</span>
+        <div className="card"> */}
+        {/* <span>Title :</span>
           <span>Educational trip to Tecno</span>
           <span>Description :</span>
           <span>
@@ -229,23 +268,7 @@ const Events = () => {
           </span>
           <span>Date : </span>
           <span>12/05/2021</span>
-        </div>
-        <div className="card">
-          <span>Title :</span>
-          <span>Educational trip to Tecno</span>
-          <span>Description :</span>
-          <span>
-            Some description Lorem ipsum dolor sit
-            amet consectetur adipisicing elit.
-            Officia eius itaque laborum vero non
-            iure, asperiores magni saepe
-            distinctio enim voluptatem velit rerum
-            soluta, ea amet ipsum doloribus
-            obcaecati consequuntur!
-          </span>
-          <span>Date : </span>
-          <span>12/05/2021</span>
-        </div>
+        </div> */}
       </div>
     </Container>
   );

@@ -38,12 +38,14 @@ const BroadCast = new mongoose.model(
     },
     file: {
       type: String,
-      required: true,
     },
     date: {
       type: Date,
     },
     description: {
+      type: String,
+    },
+    title: {
       type: String,
     },
   })
@@ -77,12 +79,35 @@ app.post(
     if (!req.file) {
       return res.status(400).send('bad request');
     }
+    console.log(req.file);
+
+    const ad = new BroadCast({
+      file: req.file.filename,
+      type: req.body.type,
+    });
+    const result = await ad.save();
+    res.send(result);
+  }
+);
+app.post(
+  '/add-event',
+  upload.single('file'),
+  // admin,
+  async (req, res) => {
+    let { error } = broadCastSchema.validate(
+      req.body
+    );
+    if (!req.file) {
+      return res.status(400).send('bad request');
+    }
+    console.log(req.body);
 
     const ad = new BroadCast({
       file: req.file.filename,
       type: req.body.type,
       date: req.body.date,
       description: req.body.description,
+      title: req.body.title,
     });
     const result = await ad.save();
     res.send(result);
@@ -92,7 +117,7 @@ app.post(
   '/get-school-calendar',
   async (req, res) => {
     const doc = await BroadCast.find({
-      type: 'school Calendar',
+      type: 'calendar',
     });
 
     if (!doc) {
@@ -103,5 +128,17 @@ app.post(
     res.status(200).send(doc);
   }
 );
+app.post('/get-events', async (req, res) => {
+  const doc = await BroadCast.find({
+    type: 'event',
+  });
+
+  if (!doc) {
+    return res
+      .status(400)
+      .send('No Result Found');
+  }
+  res.status(200).send(doc);
+});
 
 module.exports = app;

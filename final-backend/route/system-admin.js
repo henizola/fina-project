@@ -61,7 +61,9 @@ const SystemAdmin = new mongoose.model(
 
 const systemAdminSchema = Joi.object({
   email: Joi.string().required(),
-  fullName: Joi.string().required(),
+  firstName: Joi.string().required(),
+  middleName: Joi.string().required(),
+  lastName: Joi.string().required(),
   phone: Joi.string().required(),
 });
 
@@ -85,18 +87,16 @@ app.post(
     let { error } = systemAdminSchema.validate(
       req.body
     );
-    const fullName = req.body.fullName;
+    console.log(error);
+    const fullName = `${req.body.firstName} ${req.body.firstName} `;
     if (error) {
-      res.send(error.details[0].message);
+      return res.send(error.details[0].message);
     }
 
     let found = false;
     const clientcheck = await SystemAdmin.find();
     clientcheck.forEach((ad) => {
-      if (
-        ad.email === req.body.email ||
-        ad.userName === req.body.userName
-      ) {
+      if (ad.email === req.body.email) {
         found = true;
         return;
       }
@@ -148,7 +148,7 @@ app.post(
   }
 );
 
-app.post('/staff-sign-in', async (req, res) => {
+app.post('/admin-sign-in', async (req, res) => {
   const user = await SystemAdmin.findOne({
     email: req.body.email,
   });
@@ -176,6 +176,7 @@ app.post('/staff-sign-in', async (req, res) => {
       role: user.role,
       id: user._id,
       userName: user.userName,
+      user: user,
     };
     res.send(resp);
   } else {
@@ -184,9 +185,6 @@ app.post('/staff-sign-in', async (req, res) => {
       .send('user name or password not correct');
   }
 });
-
-
-
 
 // app.post('/get-clients', async (req, res) => {
 //   const clients = await SystemAdmin.find({
