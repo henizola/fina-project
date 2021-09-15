@@ -29,8 +29,8 @@ var transporter = nodemailer.createTransport({
 });
 
 app.use(express.json());
-const Principal = new mongoose.model(
-  'Principal',
+const Parents = new mongoose.model(
+  'Parents',
   new mongoose.Schema({
     email: {
       type: String,
@@ -53,72 +53,68 @@ const Principal = new mongoose.model(
       type: String,
       required: true,
     },
-
     lastName: {
+      type: String,
+      required: true,
+    },
+    childId: {
+      type: String,
+    },
+    phone: {
       type: String,
       required: true,
     },
   })
 );
 
-const principalSchema = Joi.object({
+const parentsSchema = Joi.object({
   email: Joi.string().required(),
   firstName: Joi.string().required(),
   middleName: Joi.string().required(),
   lastName: Joi.string().required(),
   phone: Joi.string().required(),
+  childId: Joi.string().required(),
 });
 
 app.post(
-  '/create-principal',
+  '/create-parents',
   // admin,
   async (req, res) => {
-    let { error } = principalSchema.validate(
+    let { error } = parentsSchema.validate(
       req.body
     );
-    console.log(req);
     const fullName =
       req.body.firstName + req.body.lastName;
-
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
 
     if (error) {
       res.send(error.details[0].message);
     }
 
     let found = false;
-    const clientcheck = await Principal.find();
-    clientcheck.forEach((principal) => {
+    const clientcheck = await Parents.find();
+    clientcheck.forEach((parents) => {
       if (
-        principal.email === req.body.email ||
-        principal.phone === req.body.phone
+        parents.email === req.body.email ||
+        parents.phone === req.body.phone
       ) {
         found = true;
         return;
       }
     });
 
-    if (found)
+    if (found) {
       return res
         .status(500)
         .send('Email or Phone Number taken');
-
-    const salt = await bcrypt.genSalt(5);
-    let password = `${
-      firstName +
-      lastName.replace(/\s+/g, '').toLowerCase()
-    }@1234`;
-    password = await bcrypt.hash(password, salt);
-
-    if (lastPrincipal.length) {
-      const lastPrincipal = await Principal.find()
-        .limit(1)
-        .sort({ $natural: -1 });
-      console.log(lastPrincipal.id);
     }
 
-    const principal = new Principal({
+    const salt = await bcrypt.genSalt(5);
+    let password = `${fullName
+      .replace(/\s+/g, '')
+      .toLowerCase()}@1234`;
+    password = await bcrypt.hash(password, salt);
+
+    const parents = new Parents({
       email: req.body.email,
       password: password,
       firstName: req.body.firstName.toLowerCase(),
@@ -126,6 +122,7 @@ app.post(
         req.body.middleName.toLowerCase(),
       lastName: req.body.lastName.toLowerCase(),
       phone: req.body.phone,
+      childId: req.body.childId,
     });
 
     var mailOptions = {
@@ -136,10 +133,9 @@ app.post(
         req.body.firstName +
         ' ' +
         req.body.lastName
-      } Wellcome to Cambridge Academy Ethiopia  to activate your account please sign in using your email your default password is ${
-        firstName +
-        lastName.replace(/\s+/g, '').toLowerCase()
-      }@1234`,
+      } Wellcome to Cambridge Academy Ethiopia your Parent Account Has Been created Sucsessfully  to activate your account please sign in using your email your default password is ${fullName
+        .replace(/\s+/g, '')
+        .toLowerCase()}@1234`,
     };
 
     transporter.sendMail(
@@ -155,71 +151,61 @@ app.post(
       }
     );
 
-    const result = await principal.save();
+    const result = await parents.save();
     res.status(200).send(result);
   }
 );
 
-app.post(
-  '/principal-sign-in',
-  async (req, res) => {
-    const user = await Principal.findOne({
-      email: req.body.email,
-    });
-
-    console.log(user);
-
-    if (!user) {
-      return res
-        .status(400)
-        .send(
-          'user name or password not correct'
-        );
-    }
-    console.log(req.body);
-
-    const validPassword = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
-    if (validPassword) {
-      const token = jwt.sign(
-        {
-          id: user._id.toString(),
-          role: user.role,
-        },
-        process.env.JWT_SECRET
-      );
-      const resp = {
-        token: token,
-        user: user,
-      };
-      res.send(resp);
-    } else {
-      res
-        .status(500)
-        .send(
-          'user name or password not correct'
-        );
-    }
-  }
-);
-
-app.post('/find-principal', async (req, res) => {
-  const user = await Principal.find();
+app.post('/parents-sign-in', async (req, res) => {
+  const user = await Parents.findOne({
+    email: req.body.email,
+  });
 
   if (!user) {
     return res
       .status(400)
-      .send('No Principal Found');
+      .send('user name or password not correct');
+  }
+
+  const validPassword = await bcrypt.compare(
+    req.body.password,
+    user.password
+  );
+  if (validPassword) {
+    const token = jwt.sign(
+      {
+        id: user._id.toString(),
+        role: user.role,
+      },
+      process.env.JWT_SECRET
+    );
+    const resp = {
+      token: token,
+      user: user,
+    };
+    res.send(resp);
+  } else {
+    res
+      .status(500)
+      .send('user name or password not correct');
+  }
+});
+
+app.post('/find-parents', async (req, res) => {
+  const user = await Parents.find();
+
+  if (!user) {
+    return res
+      .status(400)
+      .send('No Parents Found');
   }
   res.status(200).send(user);
 });
 
 app.post(
-  '/get-principals-grade',
+  '/get-parentss-grade',
   async (req, res) => {
-    const user = await Principal.find({
+    const user = await Parents.find({
       currentGrade: req.body.currentGrade,
       currentSection: req.body.currentSection,
     });
@@ -227,7 +213,7 @@ app.post(
     if (!user) {
       return res
         .status(400)
-        .send('No Principal Found');
+        .send('No Parents Found');
     }
     res.status(200).send(user);
   }

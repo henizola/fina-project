@@ -1,11 +1,8 @@
 import axios from 'axios';
-import React, {
-  useState,
-  useContext,
-} from 'react';
+import React, { useState } from 'react';
 import {
-  useParams,
   useHistory,
+  useParams,
 } from 'react-router-dom';
 import logo from '../../assets/logo.png';
 import {
@@ -13,13 +10,8 @@ import {
   FormContainer,
 } from './sign-in.styles';
 
-import { UserContext } from '../../context/user.context';
-
 const SignIn = () => {
   const { role } = useParams();
-  console.log(role);
-
-  const { setUser } = useContext(UserContext);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,12 +31,11 @@ const SignIn = () => {
       : (link = '/admin-sign-in');
 
     axios
-      .post(`http://localhost:9000/api/${link}`, {
+      .post(`http://localhost:9000/api${link}`, {
         email: email,
         password: password,
       })
       .then(function (response) {
-        console.log('reacived response');
         setWrong(false);
         localStorage.setItem(
           'token',
@@ -55,7 +46,7 @@ const SignIn = () => {
           'user',
           JSON.stringify(response.data.user)
         );
-        setUser(response.data.user);
+
         if (role === 'student') {
           history.push('/student-attendance');
         } else if (role === 'teachers') {

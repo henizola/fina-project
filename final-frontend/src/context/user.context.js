@@ -27,6 +27,7 @@ export const UserProvider = (props) => {
     phone: '',
     email: '',
   });
+  const [user, setUser] = useState(null);
 
   return (
     <UserContext.Provider
@@ -37,6 +38,8 @@ export const UserProvider = (props) => {
         setMother: setMother,
         father: father,
         setFather: setFather,
+        user: user,
+        setUser: setUser,
       }}
     >
       {props.children}

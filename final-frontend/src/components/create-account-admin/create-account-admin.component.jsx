@@ -15,6 +15,7 @@ const CreateAccountAdmin = ({
   onPrev,
   setter,
   value,
+  onRegister,
 }) => {
   const [firstName, setfirstName] = useState('');
   const [middleName, setmiddleName] =
@@ -56,7 +57,6 @@ const CreateAccountAdmin = ({
   const handleClose = () => {
     setShow(false);
   };
-  console.log(type);
   const save = (e) => {
     onNext();
     setter({
@@ -141,7 +141,7 @@ const CreateAccountAdmin = ({
           />
           <span>Email :</span>
           <input
-            type="text"
+            type="email"
             className="input"
             required
             value={email}
@@ -173,6 +173,7 @@ const CreateAccountAdmin = ({
             className="default"
             type="submit"
             style={{ marginLeft: '30px' }}
+            onClick={onRegister}
           >
             Submitt
           </button>

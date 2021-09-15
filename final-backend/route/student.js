@@ -145,7 +145,6 @@ app.post(
     let { error } = studentSchema.validate(
       req.body
     );
-    console.log(req);
     const fullName =
       req.body.firstName + req.body.lastName;
 
@@ -201,6 +200,7 @@ app.post(
       lastName: req.body.lastName.toLowerCase(),
       phone: req.body.phone,
       id: id,
+      currentGrade: req.body.grade,
       attendance: [
         {
           date: new Date(),
