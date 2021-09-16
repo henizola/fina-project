@@ -37,4 +37,23 @@ export const Container = styled.div`
     font-size: 20px;
     margin: 50px auto;
   }
+  @media screen and (max-width: 700px) {
+    width: 100vw;
+    padding: 0;
+    svg {
+      /* display: none; */
+      width: 70px;
+    }
+    span {
+      font-size: 15px;
+    }
+    .form {
+      grid-template-columns: 100px 1fr;
+      width: 100%;
+      margin: 0 !important;
+    }
+    .input {
+      width: 80%;
+    }
+  }
 `;

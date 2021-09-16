@@ -1,23 +1,23 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  width: 700px;
+  width: 100%;
   margin: 100px auto;
   text-align: center;
-
+  max-width: 90vw;
   h1 {
     margin-bottom: 50px;
   }
   .cont {
     display: flex;
+    flex-direction: column;
   }
   .left {
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 15px;
-    width: 300px;
-    margin-top: 100px;
+    width: 60%;
     padding: 0;
     height: fit-content;
   }
@@ -28,12 +28,10 @@ export const Container = styled.div`
     text-align: left;
     grid-gap: 15px;
     width: 500px;
-    margin-top: 50px;
     padding: 25px;
     height: fit-content;
     background-color: #071928;
     border-radius: 5px;
-    margin-left: 100px;
   }
   .input {
     width: 200px;
@@ -56,6 +54,12 @@ export const Container = styled.div`
     border-radius: 3px;
     color: #f79e01;
     font-size: 20px;
+  }
+  .result {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 30px;
+    margin-top: 50px;
   }
   .export {
     width: 170px;

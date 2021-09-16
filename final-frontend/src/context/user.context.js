@@ -7,11 +7,12 @@ export const UserContext = createContext();
 
 export const UserProvider = (props) => {
   const [student, setStudent] = useState({
-    firstName: 'g',
+    firstName: '',
     lastName: '',
     middleName: '',
     phone: '',
     email: '',
+    grade: null,
   });
   const [mother, setMother] = useState({
     firstName: '',

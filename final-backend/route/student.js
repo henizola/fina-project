@@ -53,36 +53,15 @@ const Student = new mongoose.model(
       type: String,
       required: true,
     },
-    parents: {
-      father: {
-        fullName: {
-          type: String,
-        },
-        email: {
-          type: String,
-        },
-        Phone: {
-          type: Number,
-        },
-      },
-      mother: {
-        fullName: {
-          type: String,
-        },
-        email: {
-          type: String,
-        },
-        Phone: {
-          type: Number,
-        },
-      },
+    first: {
+      type: Boolean,
     },
     lastName: {
       type: String,
       required: true,
     },
     id: {
-      type: Number,
+      type: String,
     },
     currentGrade: {
       type: Number,
@@ -123,6 +102,7 @@ const studentSchema = Joi.object({
   middleName: Joi.string().required(),
   lastName: Joi.string().required(),
   phone: Joi.string().required(),
+  grade: Joi.string().required(),
 });
 
 const storage = multer.diskStorage({
@@ -152,7 +132,7 @@ app.post(
     const lastName = req.body.lastName;
 
     if (error) {
-      res.send(error.details[0].message);
+      return res.send(error.details[0].message);
     }
 
     let found = false;
@@ -173,16 +153,15 @@ app.post(
         .send('Email or Phone Number taken');
 
     const salt = await bcrypt.genSalt(5);
-    let password = `${
-      firstName +
-      lastName.replace(/\s+/g, '').toLowerCase()
-    }@1234`;
+    let password = `${fullName
+      .replace(/\s+/g, '')
+      .toLowerCase()}@1234`;
     password = await bcrypt.hash(password, salt);
 
     const lastStudent = await Student.find()
       .limit(1)
       .sort({ $natural: -1 });
-    let id = 4231;
+    let id = getRandomInt(999);
 
     if (lastStudent.length) {
       const lastStudent = await Student.find()
@@ -190,6 +169,13 @@ app.post(
         .sort({ $natural: -1 });
       console.log(lastStudent.id);
     }
+    const sec = ['A', ' B', ' C', ' D'];
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * max);
+    }
+
+    const be = getRandomInt(3);
+    console.log(sec[be]);
 
     const student = new Student({
       email: req.body.email,
@@ -199,14 +185,10 @@ app.post(
         req.body.middleName.toLowerCase(),
       lastName: req.body.lastName.toLowerCase(),
       phone: req.body.phone,
-      id: id,
+      id: `CAM${id}`,
       currentGrade: req.body.grade,
-      attendance: [
-        {
-          date: new Date(),
-          remark: '',
-        },
-      ],
+      section: sec[be],
+      first: true,
     });
 
     var mailOptions = {
@@ -302,6 +284,113 @@ app.post(
         .send('No Student Found');
     }
     res.status(200).send(user);
+  }
+);
+
+app.post(
+  '/reset-student-password',
+  async (req, res) => {
+    const user = await Student.find({
+      _id: req.body.id,
+    });
+
+    const fullName = `${user.firstName} ${user.lastName} `;
+    console.log(
+      'tssss',
+      `${user[0].firstName} ${user[0].lastName} `
+    );
+
+    const salt = await bcrypt.genSalt(5);
+    let password = `${fullName
+      .replace(/\s+/g, '')
+      .toLowerCase()}@1234`;
+    password = await bcrypt.hash(password, salt);
+
+    let oldUser = await Student.updateOne(
+      {
+        _id: req.body.id,
+      },
+      {
+        $set: {
+          password: password,
+        },
+      }
+    );
+    if (oldUser.nModified) {
+      var mailOptions = {
+        from: 'cambridgeeth@gmail.com',
+        to: user.email,
+        subject: 'Password Reset',
+        text: `Dear ${
+          user.firstName + ' ' + user.lastName
+        } your Password Has been Reseted sucessfully if this is not you please report to school immediately`,
+      };
+
+      transporter.sendMail(
+        mailOptions,
+        function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(
+              'Email sent: ' + info.response
+            );
+          }
+        }
+      );
+      res.send(oldUser);
+    } else {
+      res.status(500).send('pasword not changed');
+    }
+  }
+);
+
+app.post(
+  '/change-student-password',
+  async (req, res) => {
+    const salt = await bcrypt.genSalt(5);
+
+    password = await bcrypt.hash(
+      req.body.password,
+      salt
+    );
+
+    let oldUser = await Student.updateOne(
+      {
+        _id: req.body.id,
+      },
+      {
+        $set: {
+          password: password,
+          first: false,
+        },
+      }
+    );
+    if (oldUser.nModified) {
+      // var mailOptions = {
+      //   from: 'cambridgeeth@gmail.com',
+      //   to: student.email,
+      //   subject: 'Password Changed',
+      //   text: `Dear your Password Has been changed sucessfully if this is not you please report to school immediately`,
+      // };
+
+      // transporter.sendMail(
+      //   mailOptions,
+      //   function (error, info) {
+      //     if (error) {
+      //       console.log(error);
+      //     } else {
+      //       console.log(
+      //         'Email sent: ' + info.response
+      //       );
+      //     }
+      //   }
+      // );
+
+      res.send(oldUser);
+    } else {
+      res.status(500).send('pasword not changed');
+    }
   }
 );
 

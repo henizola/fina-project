@@ -15,11 +15,12 @@ import { UserContext } from '../../../context/user.context';
 
 import axios from 'axios';
 import Printable from '../../../components/printable/printable.component';
+import CompleteModal from '../../../components/completed-modal/completed-modal.component';
 
 const AccountStepper = () => {
   const [currentStep, setCurrentStep] =
     useState(0);
-
+  const [show, setShow] = useState(false);
   const onNext = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -65,7 +66,8 @@ const AccountStepper = () => {
       .then(function (response) {
         registerFather(response.data._id);
         registerMother(response.data._id);
-        stStudebtData(student.data);
+        stStudebtData(response.data);
+        console.log();
       })
       .catch(function (error) {
         // setShow(true);
@@ -99,7 +101,9 @@ const AccountStepper = () => {
         'http://localhost:9000/api/create-parents',
         { ...mother, childId: id }
       )
-      .then(function (response) {})
+      .then(function (response) {
+        setShow(true);
+      })
       .catch(function (error) {
         // setShow(true);
         // setAlert(error.response.data);
@@ -114,6 +118,10 @@ const AccountStepper = () => {
   });
   return (
     <Container>
+      <CompleteModal
+        show={show}
+        setShow={setShow}
+      />
       <Stepper currentStep={currentStep}>
         <CreateAccountAdmin
           type={'student'}

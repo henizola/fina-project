@@ -8,7 +8,7 @@ class Printable extends React.Component {
   }
   render() {
     console.log(this.user, 'hh');
-
+    console.log(this.props.studentData);
     return (
       <Container
         style={{
@@ -65,9 +65,22 @@ class Printable extends React.Component {
 
           <div className="box">
             {' '}
-            <span>Grade </span>
-            {this.props.studentData &&
-              this.props.studentData._id}
+            <span>Grade :</span>
+            <span>
+              {this.props.studentData &&
+                this.props.studentData
+                  .currentGrade}
+              {this.props.studentData &&
+                this.props.studentData.section}
+            </span>
+          </div>
+          <div className="box">
+            {' '}
+            <span>Id :</span>
+            <span>
+              {this.props.studentData &&
+                this.props.studentData.id}
+            </span>
           </div>
 
           <button

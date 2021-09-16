@@ -1,0 +1,266 @@
+[
+  {
+    "firstName": "henok",
+    "middleName": "zelalem1",
+    "lastName": "endashaw",
+    "grade": 7,
+    "id": "61428c7e76166344c818bdc0",
+    "results": [
+      {
+        "subject": "amharic",
+        "semister1": 84,
+        "semister2": 66
+      },
+      {
+        "subject": "english",
+        "semister1": 76,
+        "semister2": 80
+      },
+      {
+        "subject": "biology",
+        "semister1": 73,
+        "semister2": 94
+      },
+      {
+        "subject": "chemistry",
+        "semister1": 54,
+        "semister2": 64
+      },
+      {
+        "subject": "physics",
+        "semister1": 91,
+        "semister2": 54
+      },
+      {
+        "subject": "geography",
+        "semister1": 72,
+        "semister2": 52
+      },
+      {
+        "subject": "history",
+        "semister1": 52,
+        "semister2": 77
+      }
+    ]
+  },
+  {
+    "firstName": "kalab",
+    "middleName": "melkamu",
+    "lastName": "chane",
+    "id": "61428d2106c6f6450bd21c9d",
+    "grade": 8,
+    "results": [
+      {
+        "subject": "amharic",
+        "semister1": 84,
+        "semister2": 66
+      },
+      {
+        "subject": "english",
+        "semister1": 76,
+        "semister2": 80
+      },
+      {
+        "subject": "biology",
+        "semister1": 73,
+        "semister2": 94
+      },
+      {
+        "subject": "chemistry",
+        "semister1": 54,
+        "semister2": 64
+      },
+      {
+        "subject": "physics",
+        "semister1": 91,
+        "semister2": 54
+      },
+      {
+        "subject": "geography",
+        "semister1": 72,
+        "semister2": 52
+      },
+      {
+        "subject": "history",
+        "semister1": 52,
+        "semister2": 77
+      }
+    ]
+  }
+]
+
+
+
+[
+    {
+      "firstName": "Odette",
+      "middleName": "Vance",
+      "lastName": "Jakeem",
+      "grade": 10,
+      "results": [
+        {
+          "subject": "amharic",
+          "semister1": 84,
+          "semister2": 66
+        },
+        {
+          "subject": "english",
+          "semister1": 76,
+          "semister2": 80
+        },
+        {
+          "subject": "biology",
+          "semister1": 73,
+          "semister2": 94
+        },
+        {
+          "subject": "chemistry",
+          "semister1": 54,
+          "semister2": 64
+        },
+        {
+          "subject": "physics",
+          "semister1": 91,
+          "semister2": 54
+        },
+        {
+          "subject": "geography",
+          "semister1": 72,
+          "semister2": 52
+        },
+        {
+          "subject": "history",
+          "semister1": 52,
+          "semister2": 77
+        }
+      ]
+    },
+    {
+      "firstName": "Ulla",
+      "middleName": "Aaron",
+      "lastName": "Benedict",
+      "grade": 12,
+      "results": [
+        {
+          "subject": "amharic",
+          "semister1": 84,
+          "semister2": 66
+        },
+        {
+          "subject": "english",
+          "semister1": 76,
+          "semister2": 80
+        },
+        {
+          "subject": "biology",
+          "semister1": 73,
+          "semister2": 94
+        },
+        {
+          "subject": "chemistry",
+          "semister1": 54,
+          "semister2": 64
+        },
+        {
+          "subject": "physics",
+          "semister1": 91,
+          "semister2": 54
+        },
+        {
+          "subject": "geography",
+          "semister1": 72,
+          "semister2": 52
+        },
+        {
+          "subject": "history",
+          "semister1": 52,
+          "semister2": 77
+        }
+      ]
+    },
+    {
+      "firstName": "Brittany",
+      "middleName": "Nolan",
+      "lastName": "Magee",
+      "grade": 11,
+      "results": [
+        {
+          "subject": "amharic",
+          "semister1": 84,
+          "semister2": 66
+        },
+        {
+          "subject": "english",
+          "semister1": 76,
+          "semister2": 80
+        },
+        {
+          "subject": "biology",
+          "semister1": 73,
+          "semister2": 94
+        },
+        {
+          "subject": "chemistry",
+          "semister1": 54,
+          "semister2": 64
+        },
+        {
+          "subject": "physics",
+          "semister1": 91,
+          "semister2": 54
+        },
+        {
+          "subject": "geography",
+          "semister1": 72,
+          "semister2": 52
+        },
+        {
+          "subject": "history",
+          "semister1": 52,
+          "semister2": 77
+        }
+      ]
+    },
+    {
+      "firstName": "Rana",
+      "middleName": "Oliver",
+      "lastName": "Tucker",
+      "grade": 7,
+      "results": [
+        {
+          "subject": "amharic",
+          "semister1": 84,
+          "semister2": 66
+        },
+        {
+          "subject": "english",
+          "semister1": 76,
+          "semister2": 80
+        },
+        {
+          "subject": "biology",
+          "semister1": 73,
+          "semister2": 94
+        },
+        {
+          "subject": "chemistry",
+          "semister1": 54,
+          "semister2": 64
+        },
+        {
+          "subject": "physics",
+          "semister1": 91,
+          "semister2": 54
+        },
+        {
+          "subject": "geography",
+          "semister1": 72,
+          "semister2": 52
+        },
+        {
+          "subject": "history",
+          "semister1": 52,
+          "semister2": 77
+        }
+      ]
+    }]

@@ -45,4 +45,18 @@ export const Container = styled.div`
     font-size: 20px;
     margin: 50px auto;
   }
+  @media screen and (max-width: 700px) {
+    margin: 0 !important;
+    max-width: 100vw;
+    span{font-size: 13px;}
+    .box{
+      grid-template-columns: 100px 1fr;
+    }
+      width: 300px;
+    }
+    .form {
+      grid-template-columns: 1fr;
+      margin: 0 !important;
+    }
+  }
 `;

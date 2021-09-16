@@ -89,7 +89,11 @@ export const Contanier = styled.div`
     }
     .progress {
       top: 10px;
-      width: 90%;
+      width: 78%;
+      left: 50px;
+    }
+    span {
+      font-size: 14px;
     }
   }
 `;

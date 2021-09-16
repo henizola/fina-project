@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
 const CustomModal = (
-  { message, handleClose, show },
+  { message, handleClose, show, next },
   props
 ) => {
   return (
@@ -17,8 +17,11 @@ const CustomModal = (
       </Modal.Header>
 
       <Modal.Footer>
+        <Button variant="success" onClick={next}>
+          yes
+        </Button>
         <Button
-          variant="success"
+          variant="danger"
           onClick={handleClose}
         >
           No

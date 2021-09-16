@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, {
+  useState,
+  useEffect,
+} from 'react';
 
 import { Container } from './reset-passwords.styles';
 
@@ -8,11 +11,85 @@ import { BiReset } from 'react-icons/bi';
 import CustomModal from '../modal/modal.component';
 import { Button } from 'react-bootstrap';
 
+import axios from 'axios';
+import CompleteModal from '../completed-modal/completed-modal.component';
+
 const ResetPassword = () => {
   const [show, setShow] = useState(false);
+  const [id, setId] = useState('');
+
+  const [showAlert, setShowAlert] =
+    useState(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = (id) => {
+    setId(id);
+    setShow(true);
+  };
+
+  const [students, setStudents] = useState([]);
+  const [filterd, setFilterd] = useState([]);
+
+  const filter = (e) => {
+    const { value, name } = e.target;
+    console.log(value);
+    if (name !== 'id') {
+      setFilterd(
+        students.filter((stud) =>
+          stud[name]
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        )
+      );
+    } else {
+      setFilterd(
+        students.filter((m) =>
+          m.id
+            .toLocaleString()
+            .includes(value.toLocaleString())
+        )
+        // )
+      );
+    }
+  };
+
+  const confirm = async () => {
+    console.log('tsssss', id);
+    await axios
+      .post(
+        'http://localhost:9000/api/reset-student-password',
+        { id: id }
+      )
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        // setShow(true);
+        // setAlert(error.response.data);
+      })
+      .then(function () {});
+    setShowAlert(true);
+    handleClose();
+  };
+
+  useEffect(() => {
+    const find = async () => {
+      axios
+        .post(
+          'http://localhost:9000/api/find-student'
+        )
+        .then(function (response) {
+          console.log(response.data, 'hhhh');
+          setStudents(response.data);
+        })
+
+        .catch(function (error) {})
+        .then(function () {
+          console.log(students);
+        });
+    };
+    find();
+  }, []);
   return (
     <Container>
       <h1>Reset Password</h1>
@@ -21,49 +98,73 @@ const ResetPassword = () => {
           <input
             type="text"
             className="input"
-            placeholder="User ID"
+            placeholder="First Name"
+            name="firstName"
+            onChange={filter}
           />
-          <FcSearch
-            style={{
-              fontSize: '33px',
-            }}
+          <input
+            type="text"
+            className="input"
+            placeholder="Last Name"
+            name="middleName"
+            onChange={filter}
           />
 
-          <button className="find">
-            Find User
-          </button>
+          <input
+            type="text"
+            className="input"
+            placeholder="Student Id"
+            name="id"
+            onChange={filter}
+          />
         </div>
-        <div className="right">
-          <span>Name : Henok Zelalem</span>
-          <span>Phone : +2519 253 5132</span>
-          <span>Account Type: Parent</span>
-          <button
-            className="export"
-            onClick={handleShow}
-          >
-            Reset To Default{' '}
-            <BiReset
-              style={{
-                color: '#fa9e00',
-                fontSize: '20px',
-                marginLeft: '10px',
-              }}
-            />
-          </button>
+        <CompleteModal
+          show={showAlert}
+          setShow={setShowAlert}
+        />
+        <div className="result">
+          {filterd.map((stud) => (
+            <div className="right">
+              <span>
+                Name :{stud.firstName}{' '}
+                {stud.middleName}
+              </span>
+              <span>Phone : {stud.phone}</span>
+              <span>Id : {stud.id}</span>
+              <span>Account Type: Student</span>
+              <button
+                className="export"
+                onClick={() => {
+                  setId(stud._id);
+                  setShow(true);
+                }}
+              >
+                Reset To Default{' '}
+                <BiReset
+                  style={{
+                    color: '#fa9e00',
+                    fontSize: '20px',
+                    marginLeft: '10px',
+                  }}
+                />
+              </button>{' '}
+              <CustomModal
+                handleClose={handleClose}
+                handleShow={handleShow}
+                show={show}
+                message={'Are You Sure ? '}
+                next={confirm}
+              >
+                <Button
+                  variant="danger"
+                  onClick={handleClose}
+                >
+                  Yes
+                </Button>
+              </CustomModal>
+            </div>
+          ))}
         </div>
-        <CustomModal
-          handleClose={handleClose}
-          handleShow={handleShow}
-          show={show}
-          message={'Are You Sure ? '}
-        >
-          <Button
-            variant="danger"
-            onClick={handleClose}
-          >
-            Yes
-          </Button>
-        </CustomModal>
       </div>
     </Container>
   );
