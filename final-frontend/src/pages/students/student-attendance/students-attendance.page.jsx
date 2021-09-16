@@ -2,9 +2,12 @@ import MaterialTable from 'material-table';
 import {
   default as React,
   useState,
+  useEffect,
 } from 'react';
 import StudentSubNav from '../../../components/student-sub-nav/student-sub-nav.component';
 import { Container } from './students-attendance.styles';
+
+import axios from 'axios';
 
 const StudentAttendance = () => {
   var today = new Date();
@@ -21,25 +24,80 @@ const StudentAttendance = () => {
     4
   );
 
+  useEffect(() => {
+    console.log(
+      JSON.parse(localStorage.getItem('user'))
+        ._id,
+      'idddddd'
+    );
+    const login = async () => {
+      axios
+        .post(
+          'http://localhost:9000/api/get-student-attendance',
+          {
+            id: JSON.parse(
+              localStorage.getItem('user')
+            )._id,
+          }
+        )
+        .then(function (response) {
+          console.log(response.data);
+
+          var d = [
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thursday',
+            'friday',
+          ];
+          console.log(d);
+
+          const tem = [];
+
+          d.map((d) => {
+            tem.push({
+              [d]: response.data[d],
+            });
+          });
+          console.log(tem);
+          setData(tem);
+        })
+
+        .catch(function (error) {
+          if (error.response) {
+            alert(error.response.data.detail);
+          }
+          console.log('henok', error);
+        })
+        .then(function () {
+          // always executed
+          console.log(data);
+        });
+    };
+    login();
+  }, []);
+
   const columns = [
     {
-      field: 'date',
+      field: 'monday',
       title: 'Date',
       editable: 'never',
     },
     {
-      field: 'remark',
+      field: 'tuesday',
       title: 'Remark',
       editable: 'never',
       render: (row) => (
         <div
           style={{
             backgroundColor: `${
-              row.remark ? 'red' : 'none'
+              row.remark === 0 ? 'red' : 'none'
             }`,
           }}
         >
-          {row.remark ? 'Absent' : 'Present'}
+          {row.remark === 0
+            ? 'Absent'
+            : 'Present'}
         </div>
       ),
     },

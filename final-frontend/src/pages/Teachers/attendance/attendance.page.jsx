@@ -15,7 +15,24 @@ import axios from 'axios';
 import { UserContext } from '../../../context/user.context';
 
 const Attendance = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([
+    {
+      fullName: 'henok',
+      monday: 0,
+      tuesday: 1,
+      wednesday: 1,
+      thursday: 0,
+      friday: 0,
+    },
+    {
+      fullName: 'kalab',
+      monday: 1,
+      tuesday: 1,
+      wednesday: 1,
+      thursday: 1,
+      friday: 0,
+    },
+  ]);
   let combination = [];
 
   const { user } = useContext(UserContext);
@@ -31,36 +48,40 @@ const Attendance = () => {
     const login = async () => {
       axios
         .post(
-          'http://localhost:9000/api/get-attendance',
+          'http://localhost:9000/api//get-attendance',
           {
-            grade: JSON.parse(
-              localStorage.getItem('user')
-            ).homeRoom[0].grade,
-            section: JSON.parse(
-              localStorage.getItem('user')
-            ).homeRoom[0].section,
+            grade: 8,
+            //  JSON.parse(
+            //   localStorage.getItem('user')
+            // ).h,
+            section: 'B',
+            // JSON.parse(
+            //   localStorage.getItem('user')
+            // ).homeRoom[0].section
+            //
           }
         )
         .then(function (response) {
-          response.data.map((d, index) => {
-            d.attendance.map(
-              (r) =>
-                r.remark === 'A' &&
-                combination.push({ index, r })
-            );
-          });
-          const newData = [];
+          setData(response.data);
+          // response.data.map((d, index) => {
+          //   d.attendance.map(
+          //     (r) =>
+          //       r.remark === 'A' &&
+          //       combination.push({ index, r })
+          //   );
+          // });
+          // const newData = [];
 
-          response.data.map((d, index) => {
-            newData.push({
-              fullName: `${d.firstName} ${d.middleName}`,
-              daysAbsent: combination.filter(
-                (com) => com.index === index
-              ).length,
-            });
-          });
+          // response.data.map((d, index) => {
+          //   newData.push({
+          //     fullName: `${d.firstName} ${d.middleName}`,
+          //     daysAbsent: combination.filter(
+          //       (com) => com.index === index
+          //     ).length,
+          //   });
+          // });
 
-          setData(newData);
+          // setData(newData);
         })
 
         .catch(function (error) {
@@ -100,35 +121,45 @@ const Attendance = () => {
       field: 'daysAbsent',
       editable: 'never',
       title: 'Days Absent',
+      render: (row) => (
+        <div>
+          {6 -
+            (row.monday +
+              row.tuesday +
+              row.thursday +
+              row.wednesday +
+              row.wednesday)}
+        </div>
+      ),
     },
 
     {
-      field: 'today',
-      title: ` ${mm} / ${dd - 4} / ${yyyy}`,
+      field: 'monday',
+      title: ` Monday`,
       editable: 'never',
       lookup: { 1: 'Present', 0: 'Absent' },
     },
     {
-      field: 'today',
-      title: ` ${mm} / ${dd - 3} / ${yyyy}`,
+      field: 'tuesday',
+      title: ` Tuesday`,
       editable: 'never',
       lookup: { 1: 'Present', 0: 'Absent' },
     },
     {
-      field: 'today',
-      title: ` ${mm} / ${dd - 2} / ${yyyy}`,
+      field: 'wednesday',
+      title: ` Wednesday`,
       editable: 'never',
       lookup: { 1: 'Present', 0: 'Absent' },
     },
     {
-      field: 'today',
-      title: ` ${mm} / ${dd - 1} / ${yyyy}`,
+      field: 'thursday',
+      title: `Thursday`,
       editable: 'never',
       lookup: { 1: 'Present', 0: 'Absent' },
     },
     {
-      field: 'today',
-      title: ` ${mm} / ${dd} / ${yyyy}`,
+      field: 'friday',
+      title: ` Friday`,
       editable:
         today !== today ? 'never' : 'always',
       lookup: { 1: 'Present', 0: 'Absent' },

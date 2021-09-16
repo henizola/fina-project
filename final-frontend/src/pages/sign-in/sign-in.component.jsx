@@ -25,7 +25,7 @@ const SignIn = () => {
       : role === 'teachers'
       ? (link = '/teacher-sign-in')
       : role === 'parent'
-      ? (link = '/parent-sign-in')
+      ? (link = '/parents-sign-in')
       : role === 'principal'
       ? (link = '/principal-sign-in')
       : (link = '/admin-sign-in');
@@ -55,6 +55,8 @@ const SignIn = () => {
           history.push('/manage-teachers');
         } else if (role === 'system-admin') {
           history.push('/Create-profile');
+        } else {
+          history.push('/parent-attendance');
         }
       })
 

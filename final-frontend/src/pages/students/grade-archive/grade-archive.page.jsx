@@ -1,31 +1,67 @@
+import axios from 'axios';
 import MaterialTable from 'material-table';
 import {
   default as React,
+  useEffect,
   useState,
 } from 'react';
-import {
-  Form,
-  InputGroup,
-} from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import StudentSubNav from '../../../components/student-sub-nav/student-sub-nav.component';
-import TeacherSubNav from '../../../components/teacher-sub-nav/teacher-sub-nav';
 import { Container } from './grade-archive.styles';
 
 const GradeArchive = () => {
   const [filterd, setFilterd] = useState([]);
-  // var today = new Date();
-  // var dd = String(today.getDate()).padStart(
-  //   2,
-  //   '0'
-  // );
-  // var mm = String(today.getMonth() + 1).padStart(
-  //   2,
-  //   '0'
-  // ); //January is 0!
-  // var yyyy = String(today.getFullYear()).slice(
-  //   2,
-  //   4
-  // );
+
+  useEffect(() => {
+    const login = async () => {
+      axios
+        .post(
+          'http://localhost:9000/api/get-transcript',
+          {
+            id: JSON.parse(
+              localStorage.getItem('user')
+            )._id,
+          }
+        )
+        .then(function (response) {
+          setData(
+            response.data.results,
+            'henooo'
+          );
+          // response.data.map((d, index) => {
+          //   d.attendance.map(
+          //     (r) =>
+          //       r.remark === 'A' &&
+          //       combination.push({ index, r })
+          //   );
+          // });
+          // const newData = [];
+
+          // response.data.map((d, index) => {
+          //   newData.push({
+          //     fullName: `${d.firstName} ${d.middleName}`,
+          //     daysAbsent: combination.filter(
+          //       (com) => com.index === index
+          //     ).length,
+          //   });
+          // });
+
+          // setData(newData);
+        })
+
+        .catch(function (error) {
+          if (error.response) {
+            alert(error.response.data.detail);
+          }
+          console.log('henok', error);
+        })
+        .then(function () {
+          // always executed
+          console.log(data);
+        });
+    };
+    login();
+  }, []);
 
   const columns = [
     {
@@ -57,44 +93,7 @@ const GradeArchive = () => {
     },
   ];
 
-  const [data, setData] = useState([
-    {
-      subject: ' Amharic',
-      semister1: 81,
-      semister2: 33,
-    },
-
-    {
-      subject: ' English',
-      semister1: 54,
-      semister2: 89,
-    },
-    {
-      subject: ' Biology',
-      semister1: 64,
-      semister2: 84,
-    },
-    {
-      subject: ' Social',
-      semister1: 63,
-      semister2: 92,
-    },
-    {
-      subject: ' Physics',
-      semister1: 53,
-      semister2: 77,
-    },
-    {
-      subject: ' Chemistry',
-      semister1: 37,
-      semister2: 42,
-    },
-    {
-      subject: ' HPE',
-      semister1: 82,
-      semister2: 91,
-    },
-  ]);
+  const [data, setData] = useState([]);
   return (
     <Container>
       <StudentSubNav />
@@ -107,9 +106,6 @@ const GradeArchive = () => {
         }}
       >
         <option value="notice">Garde 7</option>
-        <option value="calendar">Grade 8</option>
-        <option value="calendar">Grade 9</option>
-        <option value="calendar">Grade 10</option>
       </Form.Select>
 
       <div className="table">

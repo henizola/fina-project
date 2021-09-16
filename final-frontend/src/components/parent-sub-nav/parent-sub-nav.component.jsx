@@ -48,7 +48,14 @@ const ParentSubNav = () => {
           history.push('/');
         }}
       >
-        <option>Logged in as : Parent</option>
+        <option>
+          Logged in as :{' '}
+          {
+            JSON.parse(
+              localStorage.getItem('user')
+            ).email
+          }{' '}
+        </option>
         <option>Log Out</option>
       </Form.Select>
       <BsBellFill />

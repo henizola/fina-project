@@ -32,20 +32,12 @@ app.use(express.json());
 const Attendance = new mongoose.model(
   'Attendance',
   new mongoose.Schema({
-    firstName: {
+    fullName: {
       type: String,
       required: true,
     },
-    middleName: {
+    studId: {
       type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
-    id: {
-      type: Number,
     },
     grade: {
       type: Number,
@@ -54,40 +46,45 @@ const Attendance = new mongoose.model(
     },
     section: {
       type: String,
-      maxlength: 2,
-      default: '',
+      maxlength: 3,
     },
-
-    attendance: {
-      type: Array,
+    monday: {
+      type: Number,
+      default: 0,
+    },
+    tuesday: {
+      type: Number,
+      default: 0,
+    },
+    wednesday: {
+      type: Number,
+      default: 0,
+    },
+    thursday: {
+      type: Number,
+      default: 0,
+    },
+    friday: {
+      type: Number,
+      default: 0,
+    },
+    id: {
+      type: String,
     },
   })
 );
 
 const attendanceSchema = Joi.object({
-  firstName: Joi.string().required(),
-  middleName: Joi.string().required(),
-  lastName: Joi.string().required(),
-  id: Joi.number().required(),
+  fullName: Joi.string().required(),
+
+  id: Joi.string().required(),
+  studId: Joi.string().required(),
   grade: Joi.number().required(),
   section: Joi.string().required(),
 });
 
-const storage = multer.diskStorage({
-  destination: function (req, res, cb) {
-    cb(null, path.join(__dirname, '..', 'docs'));
-  },
-  filename: function (req, file, cb) {
-    const now = new Date().toISOString();
-    const date = now.replace(/:/g, '-');
-    cb(null, date + file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
-
 app.post(
-  '/insert-student',
+  '/insert-student-attendance',
   // admin,
   async (req, res) => {
     let { error } = attendanceSchema.validate(
@@ -102,7 +99,7 @@ app.post(
     let found = false;
     const clientcheck = await Attendance.find();
     clientcheck.forEach((attendance) => {
-      if (attendance.id === req.body.id) {
+      if (attendance.studId === req.body.studId) {
         found = true;
         return;
       }
@@ -114,19 +111,10 @@ app.post(
         .send('student alredy in the database ');
 
     const attendance = new Attendance({
-      firstName: req.body.firstName,
-      middleName: req.body.middleName,
-      lastName: req.body.lastName,
+      fullName: req.body.fullName,
       grade: req.body.grade,
       id: req.body.id,
-      attendance: [
-        {
-          date: new Date()
-            .toString()
-            .substring(0, 10),
-          remark: 'A',
-        },
-      ],
+      studId: req.body.studId,
       section: req.body.section,
     });
 
@@ -140,6 +128,7 @@ app.post('/get-attendance', async (req, res) => {
     grade: req.body.grade,
     section: req.body.section,
   });
+  console.log(students);
 
   if (!students) {
     return res
@@ -148,5 +137,23 @@ app.post('/get-attendance', async (req, res) => {
   }
   res.status(200).send(students);
 });
+
+app.post(
+  '/get-student-attendance',
+  async (req, res) => {
+    const students = await Attendance.findOne({
+      id: req.body.id,
+    });
+
+    console.log(students, 'pshhh');
+
+    if (!students) {
+      return res
+        .status(400)
+        .send('No Result Found');
+    }
+    res.status(200).send(students);
+  }
+);
 
 module.exports = app;

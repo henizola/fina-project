@@ -138,6 +138,21 @@ app.post('/get-markList', async (req, res) => {
   }
   res.status(200).send(students);
 });
+app.post(
+  '/get-student-markList',
+  async (req, res) => {
+    const students = await MarkList.find({
+      _id: req.body.id,
+    });
+
+    if (!students) {
+      return res
+        .status(400)
+        .send('No Result Found');
+    }
+    res.status(200).send(students);
+  }
+);
 
 app.post('/update-markList', async (req, res) => {
   let oldStudent = await MarkList.updateOne(
