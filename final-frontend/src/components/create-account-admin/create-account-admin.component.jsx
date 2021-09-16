@@ -178,7 +178,9 @@ const CreateAccountAdmin = ({
                 width: ' 100% ',
               }}
               onChange={(e) =>
-                setGrade(e.target.value)
+                setGrade(
+                  e.target.value.toString()
+                )
               }
             >
               {grades.map((g) => (

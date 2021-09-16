@@ -88,7 +88,7 @@ app.post(
       req.body
     );
     console.log(error);
-    const fullName = `${req.body.firstName} ${req.body.firstName} `;
+    const fullName = `${req.body.firstName} ${req.body.middleName} `;
     if (error) {
       return res.send(error.details[0].message);
     }
@@ -184,6 +184,14 @@ app.post('/admin-sign-in', async (req, res) => {
       .status(500)
       .send('user name or password not correct');
   }
+});
+app.post('/get-admins', async (req, res) => {
+  const user = await SystemAdmin.find();
+
+  if (!user) {
+    return res.status(400).send('no user Found');
+  }
+  res.status(200).send(user);
 });
 
 // app.post('/get-clients', async (req, res) => {

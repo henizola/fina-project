@@ -44,16 +44,19 @@ const MenuProps = {
 };
 
 const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  ,
+  11,
+  12,
 ];
 
 function getStyles(name, personName, theme) {
@@ -89,14 +92,13 @@ export default function MultipleSelect() {
     }
     setPersonName(value);
   };
-
   return (
     <div>
       <FormControl
         className={classes.formControl}
       >
         <InputLabel id="demo-mutiple-name-label">
-          Name
+          Grade
         </InputLabel>
         <Select
           labelId="demo-mutiple-name-label"

@@ -29,7 +29,6 @@ const CreateAccount = (
   };
   console.log(type);
   const save = (e) => {
-    onNext();
     e.preventDefault();
     switch (type) {
       case 'Teachers':
@@ -49,6 +48,7 @@ const CreateAccount = (
             history.push('/manage-teachers');
           })
           .catch(function (error) {
+            console.log('err');
             setShow(true);
 
             setAlert(error.response.data);

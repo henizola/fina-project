@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, {
+  useState,
+  useEffect,
+} from 'react';
 
 import { Container } from './manage-sys-admin.style';
 
@@ -9,62 +12,86 @@ import PrincipalSubNav from '../../../components/principal-subnav/principal-subn
 
 import { Form } from 'react-bootstrap';
 
+import axios from 'axios';
+import MaterialTable, {
+  MTableEditField,
+} from 'material-table';
+
 const ManageSysAdmin = () => {
   const [filterd, setFilterd] = useState([]);
 
-  const filter = (e) => {
-    setFilterd(
-      admins.filter(
-        (teacher) =>
-          teacher.firstName
-            .toLowerCase()
-            .includes(
-              e.target.value.toLowerCase()
-            ) ||
-          teacher.lastName
-            .toLowerCase()
-            .includes(
-              e.target.value.toLowerCase()
-            ) ||
-          teacher.subject
-            .toLowerCase()
-            .includes(
-              e.target.value.toLowerCase()
-            )
-      )
-    );
-    console.log(filterd);
-  };
-  const admins = [
+  const [teachers, setTeachers] = useState([]);
+
+  useEffect(() => {
+    async function fetchTeachers() {
+      axios
+        .post(
+          'http://localhost:9000/api/get-admins'
+        )
+        .then(function (response) {
+          setTeachers(response.data);
+
+          const teachers = [];
+
+          let cls = '';
+
+          response.data.map((teach) => {
+            teach.classToTeach.map((clss) =>
+              cls.concat(
+                `${clss.grade} ${teach.classToTeach[1].section}`
+              )
+            );
+            teachers.push({
+              firstName: teach.firstName,
+              lastName: teach.lastName,
+              middleName: teach.middleName,
+              subject: teach.subject,
+              phone: teach.phone,
+              email: teach.email,
+              homeRoom: teach.homeRoom,
+              classTeach: teach.classToTeach.map(
+                (clss) =>
+                  `${clss.grade}${teach.classToTeach[1].section} ,`
+              ),
+            });
+          });
+
+          setTeachers(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .then(function () {});
+    }
+    fetchTeachers();
+  }, []);
+
+  const columns = [
     {
-      id: 1,
-      lastName: 'Snow',
-      firstName: 'Jon',
-      status: 'Active',
-      email: 'Snow@gmail.com',
-      phone: '+251 912-145-345',
+      field: 'fullName',
+      title: 'First name',
+      editable: false,
     },
     {
-      id: 2,
-      lastName: 'Lannister',
-      firstName: 'Cersei',
-      status: 'Active',
-      email: 'Snow@gmail.com',
-      phone: '+251 912-145-345',
+      field: 'status',
+      title: 'Status',
+      lookup: { 1: 'Active', 0: 'Inactive' },
+    },
+    {
+      field: 'phone',
+      title: 'Phone No',
+    },
+    {
+      field: 'email',
+      title: 'Email',
     },
   ];
+
   return (
     <Container>
       <PrincipalSubNav />
       <div className="top">
-        <div>
-          <input
-            type="text"
-            className="input"
-            placeholder="Live Search"
-            onChange={filter}
-          />
-        </div>
+        <div></div>
         <h1 className="header">
           Manage System Admin
         </h1>
@@ -72,31 +99,70 @@ const ManageSysAdmin = () => {
           Create System Admin
         </Link>
       </div>
-      <div className="cards">
-        <div className="card">
-          <h4>Name : Admin 1</h4>
-          <div className="status">
-            <h4>Status :</h4>
-            <Form.Select>
-              <option>Active</option>
-              <option>Inactive</option>
-            </Form.Select>
-            <RiDeleteBin6Line />
-            <button className="save">Save</button>
-          </div>
-        </div>
-        <div className="card">
-          <h2>Name : Admin 2</h2>
-          <div className="status">
-            <h2>Status :</h2>
-            <Form.Select>
-              <option>Active</option>
-              <option>Inactive</option>
-            </Form.Select>
-            <RiDeleteBin6Line />
-            <button className="save">Save</button>
-          </div>
-        </div>
+      <div className="table">
+        <MaterialTable
+          columns={columns}
+          data={teachers}
+          disableSelectionOnClick
+          title=""
+          editable={{
+            onRowAdd: () =>
+              new Promise(
+                (resolve, reject) => {}
+              ),
+            onRowDelete: (selectedRow) =>
+              new Promise((resolve, reject) => {
+                const index =
+                  selectedRow.tableData.id;
+                let updatedRows = [...teachers];
+                updatedRows.splice(index, 1);
+                setTimeout(() => {
+                  setTeachers(updatedRows);
+                  resolve();
+                }, 2000);
+              }),
+            onRowUpdate: (updatedRow, oldRow) =>
+              new Promise((resolve, reject) => {
+                const index = oldRow.tableData.id;
+                const updatedRows = [...teachers];
+                updatedRows[index] = updatedRow;
+                setTimeout(() => {
+                  setTeachers(updatedRows);
+                  resolve();
+                }, 2000);
+              }),
+            onBulkUpdate: (selectedRows) =>
+              new Promise((resolve, reject) => {
+                const rows =
+                  Object.values(selectedRows);
+                const updatedRows = [...teachers];
+                let index;
+                rows.map((emp) => {
+                  index =
+                    emp.oldData.tableData.id;
+                  updatedRows[index] =
+                    emp.newData;
+                });
+                setTeachers(updatedRows);
+                resolve();
+              }),
+          }}
+          options={{
+            actionsColumnIndex: -1,
+            exportButton: true,
+          }}
+          components={{
+            MTableEditField: (props) => (
+              <div
+                style={{
+                  border: '2px solid red',
+                }}
+              >
+                <MTableEditField {...props} />
+              </div>
+            ),
+          }}
+        />
       </div>
     </Container>
   );

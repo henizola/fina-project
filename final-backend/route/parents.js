@@ -191,7 +191,7 @@ app.post('/parents-sign-in', async (req, res) => {
   }
 });
 
-app.post('/find-parents', async (req, res) => {
+app.post('/get-parents', async (req, res) => {
   const user = await Parents.find();
 
   if (!user) {

@@ -14,28 +14,35 @@ const MarkList = () => {
 
   const [grade, setGrade] = useState(7);
   const [section, setSection] = useState('B');
+  const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
     const login = async () => {
       axios
         .post(
-          'http://localhost:9000/api/get-students-grade',
+          'http://localhost:9000/api/get-markList',
           {
-            currentSection: section,
-            currentGrade: grade,
+            grade: grade,
           }
         )
         .then(function (response) {
-          const newData = [];
+          const ss = [];
 
-          response.data.map((d, index) => {
-            console.log(d, 'pppppppp');
-            newData.push({
-              fullName: `${d.firstName} ${d.middleName}`,
-            });
-          });
-
-          setData(newData);
+          response.data.map((stud) =>
+            ss.push({
+              fullName: stud.fullName,
+              subject:
+                stud[
+                  JSON.parse(
+                    localStorage.getItem('user')
+                  ).subject.toLowerCase()
+                ],
+              studId: stud['studId'],
+              id: stud['id'],
+            })
+          );
+          setData(ss);
+          console.log(ss);
         })
 
         .catch(function (error) {
@@ -50,7 +57,7 @@ const MarkList = () => {
         });
     };
     login();
-  }, [grade, section]);
+  }, [grade, section, updated]);
 
   const columns = [
     {
@@ -59,34 +66,70 @@ const MarkList = () => {
       editable: 'never',
     },
     {
-      field: 'id',
+      field: 'studId',
       editable: 'never',
       title: 'Id',
     },
 
     {
-      field: 'today',
+      field: 'subject.first',
       title: `15%`,
     },
     {
-      field: 'today',
+      field: 'subject.second',
       title: ` 15%`,
     },
     {
-      field: 'today',
-      title: `10%`,
+      field: 'subject.third',
+      title: `20%`,
     },
     {
-      field: 'today',
-      title: ` 10%`,
-    },
-    {
-      field: 'today',
+      field: 'subject.final',
       title: ` 50%`,
     },
+    {
+      field: 'total',
+      title: ` 100%`,
+      render: (row) => (
+        <div>
+          {row.subject.first +
+            row.subject.second +
+            row.subject.third +
+            row.subject.final}
+        </div>
+      ),
+    },
   ];
-
-  const [data, setData] = useState([]);
+  const handdleUpdate = (rows) => {
+    rows.map((row) =>
+      axios
+        .post(
+          'http://localhost:9000/api/update-markList',
+          {
+            id: row.id,
+            subject: JSON.parse(
+              localStorage.getItem('user')
+            ).subject.toLowerCase(),
+            result: row.subject,
+          }
+        )
+        .then(function (response) {
+          console.log(response.data);
+          setUpdated(!updated);
+        })
+        .catch((err) => console.log(err))
+    );
+  };
+  const [data, setData] = useState([
+    // {
+    //   fullName: 'hhenok zelalem',
+    //   id: 'ETS092',
+    //   first: 17,
+    //   second: 12,
+    //   third: 14,
+    //   final: 40,
+    // },
+  ]);
   return (
     <Container>
       <TeacherSubNav />
@@ -106,20 +149,6 @@ const MarkList = () => {
           <option value={9}>Grade 9</option>
           <option value={10}>Grade 10</option>
         </Form.Select>
-        <Form.Select
-          style={{
-            width: '200px',
-            margin: '0 auto',
-          }}
-          onChange={(e) =>
-            setSection(e.target.value)
-          }
-        >
-          <option value=" A ">Section A</option>
-          <option value="B">B</option>
-          <option value=" C ">C</option>
-          <option value=" D ">D</option>
-        </Form.Select>
       </div>
 
       <div className="table">
@@ -134,6 +163,7 @@ const MarkList = () => {
                 const rows =
                   Object.values(selectedRows);
                 const updatedRows = [...data];
+                console.log(updatedRows);
                 let index;
                 rows.map((emp) => {
                   index =
@@ -141,7 +171,7 @@ const MarkList = () => {
                   updatedRows[index] =
                     emp.newData;
                 });
-                setData(updatedRows);
+                handdleUpdate(updatedRows);
                 resolve();
               }),
           }}

@@ -71,4 +71,9 @@ export const Container = styled.div`
       border-radius: 3px;
     }
   }
+  .table {
+    width: 80vw;
+    margin: 50px auto;
+    height: 60vh;
+  }
 `;

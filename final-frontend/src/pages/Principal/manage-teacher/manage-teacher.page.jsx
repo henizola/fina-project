@@ -10,6 +10,7 @@ import PrincipalSubNav from '../../../components/principal-subnav/principal-subn
 import { Container } from './manage-teacher';
 
 import axios from 'axios';
+import MultipleSelect from '../../../components/custom-select/custom-select.component';
 
 const ManageTeacher = () => {
   const [filterd, setFilterd] = useState([]);
@@ -89,6 +90,7 @@ const ManageTeacher = () => {
     {
       field: 'classTeach',
       title: 'Class To Teach',
+      render: (rowData) => <MultipleSelect />,
     },
   ];
 

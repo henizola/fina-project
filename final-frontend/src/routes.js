@@ -1,3 +1,4 @@
+import ExportGrade from './components/export-grade/export-grade.component';
 import ParentAttendance from './pages/Parents/Parent-attendance/Parent-attendance.page';
 import ParentEvents from './pages/Parents/parent-Events/Parent-Events.page';
 import ParentExams from './pages/Parents/Parent-Exams/parent-exams.page';
@@ -46,6 +47,10 @@ export default [
   {
     path: '/manage-sys-admin',
     component: ManageSysAdmin,
+  },
+  {
+    path: '/export-grade',
+    component: ExportGrade,
   },
   {
     path: '/create-sys-admin',

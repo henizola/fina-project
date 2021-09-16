@@ -12,8 +12,9 @@ const StudentSearch = () => {
   const [students, setStudents] = useState([]);
   const [filterd, setFilterd] = useState([]);
 
+  const [parent, setParent] = useState([]);
+
   const filter = (e) => {
-    console.log(students[3].id.toLocaleString());
     const { value, name } = e.target;
     console.log(value);
     if (name !== 'id') {
@@ -25,15 +26,22 @@ const StudentSearch = () => {
         )
       );
     } else {
-      setFilterd(
-        students.filter((m) =>
-          m.id
-            .toLocaleString()
-            .includes(value.toLocaleString())
-        )
-        // )
+      const filterdStud = students.filter((m) =>
+        m.id
+          .toLocaleString()
+          .includes(value.toLocaleString())
       );
+      console.log(filterdStud);
     }
+    // const newStud = [];
+
+    // parent.map((p) => {
+    //   students.map((stu) => {
+    //     stu._id === p.childId &&
+    //       newStud.push(...p);
+    //   });
+    // });
+    // console.log(newStud);
   };
 
   useEffect(() => {
@@ -52,11 +60,37 @@ const StudentSearch = () => {
           console.log(students);
         });
     };
+    const findParent = async () => {
+      axios
+        .post(
+          'http://localhost:9000/api/get-parents'
+        )
+        .then(function (response) {
+          console.log(response.data, 'trrr');
+          setParent(response.data);
+        })
+
+        .catch(function (error) {
+          console.log('errrr');
+        })
+        .then(function () {
+          console.log(students);
+        });
+    };
     find();
+    findParent();
+    console.log(parent, students);
   }, []);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [id, setId] = useState('');
+
+  function getRandomInt() {
+    return Math.floor(
+      Math.random() * parent.length
+    );
+  }
+
   return (
     <Container>
       <TeacherSubNav />
@@ -87,27 +121,29 @@ const StudentSearch = () => {
           />
         </div>
         <div className="right-cont">
-          {filterd.map((stud) => (
-            <div className="right">
+          {filterd.map((stud, id) => (
+            <div className="right" key={id}>
               <div className="flex">
                 <span>
                   Name : {stud.firstName}{' '}
                   {stud.middleName}
                 </span>
-                <span>ID : CAM{stud.id}</span>
+                <span>ID : {stud.id}</span>
                 <span>
                   Current Class :{' '}
                   {stud.currentGrade}
-                  {stud.currentSection}
+                  {stud.section}
                 </span>
               </div>
               <div className="flex center">
                 <span>Father</span>
                 <span>
-                  Phone : +251-963-124-35
+                  Phone :{' '}
+                  {parent[getRandomInt()].phone}
                 </span>
                 <span>
-                  Email : parent@gmail.com
+                  Email :{' '}
+                  {parent[getRandomInt()].email}
                 </span>
                 <span
                   style={{ marginTop: '25px' }}
@@ -115,10 +151,12 @@ const StudentSearch = () => {
                   Mother
                 </span>
                 <span>
-                  Phone : +251-963-124-35
+                  Phone :{' '}
+                  {parent[getRandomInt()].phone}
                 </span>
                 <span>
-                  Email : parent@gmail.com
+                  Email :{' '}
+                  {parent[getRandomInt()].email}
                 </span>
               </div>
             </div>

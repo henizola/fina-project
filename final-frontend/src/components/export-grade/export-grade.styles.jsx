@@ -1,54 +1,65 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  width: 80vw;
-  margin: 0 auto;
+  width: 100vw;
+  height: fit-content;
+  max-width: 100vw;
+  max-height: 100vh;
   text-align: center;
-  margin-top: 100px;
   h1 {
+    margin-top: 100px;
     margin-bottom: 50px;
+  }
+  .table {
+    width: 80vw;
+    margin: 0 auto;
   }
   .cont {
     display: flex;
-    flex-direction: column;
+    width: 70vw;
+
+    margin: 0 auto;
   }
   .left {
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 240px 1fr;
     grid-gap: 15px;
-    width: 50vw;
+
+    margin-top: 100px;
     padding: 0;
     height: fit-content;
   }
   .right {
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     text-align: left;
     grid-gap: 15px;
-    width: 400px;
+    width: 100%;
     margin-top: 50px;
     padding: 25px;
     height: fit-content;
     background-color: #071928;
     border-radius: 5px;
+    margin-left: 100px;
+    color: #707070 !important;
+  }
+  .flex {
+    display: flex;
+    flex-direction: column;
+  }
+  .center {
+    text-align: center;
   }
   .input {
-    width: 200px;
+    width: 300px;
     height: 40px;
     padding-left: 10px;
     border: 1px solid #c9c9c9;
     border-radius: 3px;
   }
-  span {
-    margin-top: 10px;
-    font-size: 20px;
-    color: #fff;
-  }
-  .left span {
-    color: #071928;
-  }
+
   .find {
     background-color: #071928;
     margin: 0px 0;
@@ -68,9 +79,20 @@ export const Container = styled.div`
     background-color: transparent;
     border-radius: 5px;
   }
-  .result {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    width: 80vw;
+  svg {
+    margin-top: 3px;
+  }
+  tfoot {
+    border-bottom: 0;
+  }
+  .table {
+  }
+  .crid {
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 60vw;
+    margin: 0px auto;
+    margin-top: 50px;
   }
 `;

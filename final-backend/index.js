@@ -17,6 +17,8 @@ const principal = require('./route/principal');
 const broadcast = require('./route/broadcast');
 const register = require('./route/register');
 const parents = require('./route/parents');
+const transcript = require('./route/transcript');
+const grade = require('./route/markList');
 
 app.use(cors());
 app.use(cookieParser());
@@ -50,6 +52,8 @@ app.use('/api', principal);
 app.use('/api', broadcast);
 app.use('/api', register);
 app.use('/api', parents);
+app.use('/api', transcript);
+app.use('/api', grade);
 
 const port = process.env.PORT || 9000;
 app.listen(port, () =>
