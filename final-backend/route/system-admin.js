@@ -202,7 +202,13 @@ app.post(
   '/change-admin-password',
   async (req, res) => {
     const salt = await bcrypt.genSalt(5);
-    console.log('here');
+    const admin = await SystemAdmin.findOne({
+      _id: req.body.id,
+    });
+    // console.log(
+    //   admin,
+    //   'fdghohgfdhjkghfdhjklghfdhjkljhgfdghjklkhgfcghjkljhgc'
+    // );
     password = await bcrypt.hash(
       req.body.password,
       salt
@@ -221,6 +227,26 @@ app.post(
     );
     if (oldUser.nModified) {
       res.send(oldUser);
+
+      var mailOptions = {
+        from: 'nodemailer.henok@gmail.com',
+        to: admin.email,
+        subject: 'Password Changed',
+        text: `Hello ${admin.fullName} your CABRIDGE ACCADAMY Account Password was Changed sucessfully if this is not you please report to the System Admin Immideatly`,
+      };
+
+      transporter.sendMail(
+        mailOptions,
+        function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(
+              'Email sent: ' + info.response
+            );
+          }
+        }
+      );
     } else {
       res.status(500).send('pasword not changed');
     }

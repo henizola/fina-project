@@ -69,7 +69,7 @@ const ChangePassword = () => {
       />
       <FormContainer>
         <input
-          type="text"
+          type="password"
           className="input"
           placeholder="New Password"
           onChange={(e) =>
