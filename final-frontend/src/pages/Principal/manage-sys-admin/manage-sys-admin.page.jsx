@@ -73,11 +73,6 @@ const ManageSysAdmin = () => {
       editable: false,
     },
     {
-      field: 'status',
-      title: 'Status',
-      lookup: { 1: 'Active', 0: 'Inactive' },
-    },
-    {
       field: 'phone',
       title: 'Phone No',
     },

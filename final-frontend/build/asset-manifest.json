@@ -1,0 +1,40 @@
+{
+  "files": {
+    "main.css": "/static/css/main.8c8b27cf.chunk.css",
+    "main.js": "/static/js/main.7cc6379d.chunk.js",
+    "main.js.map": "/static/js/main.7cc6379d.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.7699e878.js",
+    "runtime-main.js.map": "/static/js/runtime-main.7699e878.js.map",
+    "static/js/2.4d65aa6f.chunk.js": "/static/js/2.4d65aa6f.chunk.js",
+    "static/js/2.4d65aa6f.chunk.js.map": "/static/js/2.4d65aa6f.chunk.js.map",
+    "static/js/3.bf569ad0.chunk.js": "/static/js/3.bf569ad0.chunk.js",
+    "static/js/3.bf569ad0.chunk.js.map": "/static/js/3.bf569ad0.chunk.js.map",
+    "static/js/4.cb762e3a.chunk.js": "/static/js/4.cb762e3a.chunk.js",
+    "static/js/4.cb762e3a.chunk.js.map": "/static/js/4.cb762e3a.chunk.js.map",
+    "static/js/5.2d371983.chunk.js": "/static/js/5.2d371983.chunk.js",
+    "static/js/5.2d371983.chunk.js.map": "/static/js/5.2d371983.chunk.js.map",
+    "static/js/6.7436790f.chunk.js": "/static/js/6.7436790f.chunk.js",
+    "static/js/6.7436790f.chunk.js.map": "/static/js/6.7436790f.chunk.js.map",
+    "index.html": "/index.html",
+    "service-worker.js": "/service-worker.js",
+    "service-worker.js.map": "/service-worker.js.map",
+    "static/css/main.8c8b27cf.chunk.css.map": "/static/css/main.8c8b27cf.chunk.css.map",
+    "static/js/2.4d65aa6f.chunk.js.LICENSE.txt": "/static/js/2.4d65aa6f.chunk.js.LICENSE.txt",
+    "static/js/3.bf569ad0.chunk.js.LICENSE.txt": "/static/js/3.bf569ad0.chunk.js.LICENSE.txt",
+    "static/js/4.cb762e3a.chunk.js.LICENSE.txt": "/static/js/4.cb762e3a.chunk.js.LICENSE.txt",
+    "static/js/5.2d371983.chunk.js.LICENSE.txt": "/static/js/5.2d371983.chunk.js.LICENSE.txt",
+    "static/media/admin.0e97f01f.jpg": "/static/media/admin.0e97f01f.jpg",
+    "static/media/icon-for-family-8.e2d7f25c.jpg": "/static/media/icon-for-family-8.e2d7f25c.jpg",
+    "static/media/logo.c4a9d2d5.png": "/static/media/logo.c4a9d2d5.png",
+    "static/media/principal.07e15868.jpg": "/static/media/principal.07e15868.jpg",
+    "static/media/right.e4d240be.png": "/static/media/right.e4d240be.png",
+    "static/media/staff-icon-15.81187a28.jpg": "/static/media/staff-icon-15.81187a28.jpg",
+    "static/media/teacher-icon-png-16 (1).2f8c3a37.jpg": "/static/media/teacher-icon-png-16 (1).2f8c3a37.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.7699e878.js",
+    "static/js/2.4d65aa6f.chunk.js",
+    "static/css/main.8c8b27cf.chunk.css",
+    "static/js/main.7cc6379d.chunk.js"
+  ]
+}
