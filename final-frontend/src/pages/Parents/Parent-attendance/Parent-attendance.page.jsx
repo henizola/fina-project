@@ -1,7 +1,9 @@
+import axios from 'axios';
 import MaterialTable from 'material-table';
 import {
   default as React,
   useState,
+  useEffect,
 } from 'react';
 import ParentSubNav from '../../../components/parent-sub-nav/parent-sub-nav.component';
 import { Container } from './Parent-attendance.styles';
@@ -21,6 +23,57 @@ const ParentAttendance = () => {
     4
   );
 
+  useEffect(() => {
+    const login = async () => {
+      axios
+        .post(
+          'http://localhost:9000/api/get-student-attendance',
+          {
+            id: JSON.parse(
+              localStorage.getItem('user')
+            ).childId,
+          }
+        )
+        .then(function (response) {
+          console.log(response.data, 'ddddd');
+
+          var d = [
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thursday',
+            'friday',
+          ];
+          console.log(d);
+
+          const tem = [];
+
+          d.map((d) => {
+            tem.push({
+              date: d,
+              remark: response.data[d],
+            });
+          });
+          console.log(tem, 'tem');
+          setData(tem);
+        })
+
+        .catch(function (error) {
+          if (error.response) {
+            console.log(
+              error.response.data.detail
+            );
+          }
+          console.log('henok', error);
+        })
+        .then(function () {
+          // always executed
+          console.log(data);
+        });
+    };
+    login();
+  }, []);
+
   const columns = [
     {
       field: 'date',
@@ -28,65 +81,26 @@ const ParentAttendance = () => {
       editable: 'never',
     },
     {
-      field: 'remark',
+      field: 'tuesday',
       title: 'Remark',
       editable: 'never',
       render: (row) => (
         <div
           style={{
             backgroundColor: `${
-              row.remark ? 'red' : 'none'
+              row.remark === 0 ? 'red' : 'white'
             }`,
           }}
         >
-          {row.remark ? 'Absent' : 'Present'}
+          {row.remark === 0
+            ? 'Absent'
+            : 'Present'}
         </div>
       ),
     },
   ];
 
-  const [data, setData] = useState([
-    {
-      id: 1,
-      date: `${dd}/${mm}/${yyyy}`,
-      remark: 1,
-    },
-    {
-      id: 2,
-      date: `${dd - 1}/${mm}/${yyyy}`,
-      remark: 0,
-    },
-    {
-      id: 3,
-      date: `${dd - 2}/${mm}/${yyyy}`,
-      remark: 0,
-    },
-    {
-      id: 4,
-      date: `${dd - 3}/${mm}/${yyyy}`,
-      remark: 1,
-    },
-    {
-      id: 5,
-      date: `${dd - 4}/${mm}/${yyyy}`,
-      remark: 0,
-    },
-    {
-      id: 3,
-      date: `${dd - 6}/${mm}/${yyyy}`,
-      remark: 0,
-    },
-    {
-      id: 4,
-      date: `${dd - 7}/${mm}/${yyyy}`,
-      remark: 1,
-    },
-    {
-      id: 5,
-      date: `${dd - 8}/${mm}/${yyyy}`,
-      remark: 0,
-    },
-  ]);
+  const [data, setData] = useState([]);
   return (
     <Container>
       <ParentSubNav />

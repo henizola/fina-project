@@ -74,11 +74,10 @@ const StudentSubNav = () => {
       >
         <option>
           Logged in as :{' '}
-          {
+          {localStorage.getItem('user') &&
             JSON.parse(
               localStorage.getItem('user')
-            ).email
-          }
+            ).email}
         </option>
         <option>Log Out</option>
       </Form.Select>

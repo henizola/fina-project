@@ -1,12 +1,12 @@
+import axios from 'axios';
 import {
   default as React,
-  useState,
   useEffect,
+  useState,
 } from 'react';
-import StudentSubNav from '../../../components/student-sub-nav/student-sub-nav.component';
-
+import ParentSubNav from '../../../components/parent-sub-nav/parent-sub-nav.component';
 import { Container } from './Parent-Events.styles';
-import axios from 'axios';
+
 const Events = () => {
   const [filterd, setFilterd] = useState([]);
 
@@ -158,7 +158,7 @@ const Events = () => {
   ]);
   return (
     <Container>
-      <StudentSubNav />
+      <ParentSubNav />
       <h1>Upcoming Events</h1>
       <div className="cards">
         {events.map((event) => (

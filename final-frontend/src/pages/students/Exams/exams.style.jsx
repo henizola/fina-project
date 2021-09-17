@@ -13,7 +13,7 @@ export const Container = styled.div`
   .card {
     background-color: #071928;
     border-radius: 5px;
-    color: #707070 !important;
+    color: #fff !important;
     width: 100%;
     padding: 15px;
     text-align: left;

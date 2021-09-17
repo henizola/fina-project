@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 
 import { Modal } from 'react-bootstrap';
 
-import complete from '../../assets/completed.gif';
+import complete from '../../assets/right.png';
 import { Container } from './completed.styles';
 
 const CompleteModal = ({ show, setShow }) => {
   setTimeout(() => setShow(false), 2000);
+
+  console.log('bruhhhhh', show);
 
   return (
     <Container>
@@ -19,7 +21,7 @@ const CompleteModal = ({ show, setShow }) => {
           top: '300px',
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '30vw',
+          width: '400px',
           padding: '0',
           backgroundColor:
             'transparent!important',
@@ -28,9 +30,8 @@ const CompleteModal = ({ show, setShow }) => {
         <Modal.Header
           style={{
             padding: '0',
-            backgroundColor:
-              'transparent!important',
-            border: '2px solid transparent',
+            backgroundColor: 'rgb (0,0,0,)',
+            width: '50px',
           }}
         >
           <Modal.Title

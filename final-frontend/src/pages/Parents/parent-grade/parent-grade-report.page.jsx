@@ -9,6 +9,7 @@ import StudentSubNav from '../../../components/student-sub-nav/student-sub-nav.c
 import TeacherSubNav from '../../../components/teacher-sub-nav/teacher-sub-nav';
 import { Container } from './parent-grade-report.styles';
 import axios from 'axios';
+import ParentSubNav from '../../../components/parent-sub-nav/parent-sub-nav.component';
 const GradeReport = () => {
   const [filterd, setFilterd] = useState([]);
 
@@ -134,7 +135,7 @@ const GradeReport = () => {
   ]);
   return (
     <Container>
-      <StudentSubNav />
+      <ParentSubNav />
       <h1>Mark list</h1>
 
       <div className="table">

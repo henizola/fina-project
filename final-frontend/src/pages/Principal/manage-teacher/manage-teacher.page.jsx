@@ -98,19 +98,15 @@ const ManageTeacher = () => {
     <Container>
       <PrincipalSubNav />
       <div className="top">
-        <Link to="create-teacher">
-          Create Teacher
-        </Link>
+        <div></div>
         <div></div>
         <h1 className="header">
           Manage Teachers
         </h1>
 
+        <div></div>
         <Link to="create-teacher">
-          Manage Homeroom
-        </Link>
-        <Link to="create-teacher">
-          Manage Class To Teach
+          Create Teacher
         </Link>
       </div>
       <div className="table">

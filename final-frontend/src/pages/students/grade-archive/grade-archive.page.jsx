@@ -24,34 +24,14 @@ const GradeArchive = () => {
           }
         )
         .then(function (response) {
-          setData(
-            response.data.results,
-            'henooo'
-          );
-          // response.data.map((d, index) => {
-          //   d.attendance.map(
-          //     (r) =>
-          //       r.remark === 'A' &&
-          //       combination.push({ index, r })
-          //   );
-          // });
-          // const newData = [];
-
-          // response.data.map((d, index) => {
-          //   newData.push({
-          //     fullName: `${d.firstName} ${d.middleName}`,
-          //     daysAbsent: combination.filter(
-          //       (com) => com.index === index
-          //     ).length,
-          //   });
-          // });
-
-          // setData(newData);
+          setData(response.data.results);
         })
 
         .catch(function (error) {
           if (error.response) {
-            alert(error.response.data.detail);
+            console.log(
+              error.response.data.detail
+            );
           }
           console.log('henok', error);
         })

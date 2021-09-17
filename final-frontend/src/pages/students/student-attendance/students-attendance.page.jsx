@@ -24,12 +24,9 @@ const StudentAttendance = () => {
     4
   );
 
+  const [abs, setAbs] = useState(null);
+
   useEffect(() => {
-    console.log(
-      JSON.parse(localStorage.getItem('user'))
-        ._id,
-      'idddddd'
-    );
     const login = async () => {
       axios
         .post(
@@ -41,7 +38,7 @@ const StudentAttendance = () => {
           }
         )
         .then(function (response) {
-          console.log(response.data);
+          const temp = 0;
 
           var d = [
             'monday',
@@ -56,11 +53,13 @@ const StudentAttendance = () => {
 
           d.map((d) => {
             tem.push({
-              [d]: response.data[d],
+              date: d,
+              remark: response.data[d],
             });
           });
-          console.log(tem);
+
           setData(tem);
+          setAbs(temp);
         })
 
         .catch(function (error) {
@@ -79,7 +78,7 @@ const StudentAttendance = () => {
 
   const columns = [
     {
-      field: 'monday',
+      field: 'date',
       title: 'Date',
       editable: 'never',
     },
@@ -91,7 +90,7 @@ const StudentAttendance = () => {
         <div
           style={{
             backgroundColor: `${
-              row.remark === 0 ? 'red' : 'none'
+              row.remark === 0 ? 'red' : 'white'
             }`,
           }}
         >
@@ -153,9 +152,8 @@ const StudentAttendance = () => {
       <div className="table">
         <div className="desc">
           <h3>
-            Days Absent In the past month: 2{' '}
+            Days Absent In the past month: {abs}
           </h3>
-          <h3>Total Days Absent : 3</h3>
         </div>
 
         <MaterialTable

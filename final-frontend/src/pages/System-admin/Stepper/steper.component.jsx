@@ -20,7 +20,7 @@ import CompleteModal from '../../../components/completed-modal/completed-modal.c
 const AccountStepper = () => {
   const [currentStep, setCurrentStep] =
     useState(0);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   const onNext = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -118,10 +118,6 @@ const AccountStepper = () => {
   });
   return (
     <Container>
-      <CompleteModal
-        show={show}
-        setShow={setShow}
-      />
       <Stepper currentStep={currentStep}>
         <CreateAccountAdmin
           type={'student'}
@@ -144,6 +140,8 @@ const AccountStepper = () => {
           value={'mother'}
           setter={setMothers}
           onRegister={registerStudent}
+          show={show}
+          setShow={setShow}
         />
         <Printable
           ref={componentRef}
@@ -152,6 +150,8 @@ const AccountStepper = () => {
           father={father}
           studentData={studentData}
           onRegister={handlePrint}
+          show={show}
+          setShow={setShow}
         />
       </Stepper>
     </Container>

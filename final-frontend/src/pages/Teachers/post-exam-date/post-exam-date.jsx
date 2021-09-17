@@ -13,6 +13,7 @@ import { Container } from './post-exam-date.styles';
 import axios from 'axios';
 
 import { UserContext } from '../../../context/user.context';
+import CompleteModal from '../../../components/completed-modal/completed-modal.component';
 
 const PostExam = () => {
   const [type, settype] = useState('quiz');
@@ -23,6 +24,8 @@ const PostExam = () => {
   const [teacher, setteacher] = useState(null);
 
   const { user } = useContext(UserContext);
+
+  const [show, setShow] = useState(true);
 
   useEffect(() => {
     const login = async () => {
@@ -70,9 +73,12 @@ const PostExam = () => {
       )
       .then(function (response) {
         console.log(response);
+        setShow(true);
       })
 
       .catch(function (error) {
+        setShow(true);
+
         if (error.response) {
           alert(error.response.data.detail);
         }
@@ -84,6 +90,10 @@ const PostExam = () => {
       <div className="container">
         <h1>Post Exam</h1>
         <div className="upload">
+          <CompleteModal
+            show={show}
+            setShow={setShow}
+          />
           <InputGroup>
             <InputGroup.Text>
               Exam Type

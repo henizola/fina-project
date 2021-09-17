@@ -13,21 +13,25 @@ export const Container = styled.div`
   .cont {
     display: flex;
     width: 70vw;
+    flex-direction: column;
 
     margin: 0 auto;
   }
   .left {
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 15px;
-
+    width: 100%;
     margin-top: 100px;
     padding: 0;
     height: fit-content;
   }
-  .mat-row:nth-child(odd) {
-    background-color: black !important;
+  .right-cont {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 50px;
   }
   .right {
     margin: 0 auto;
@@ -38,10 +42,9 @@ export const Container = styled.div`
     width: 100%;
     margin-top: 50px;
     padding: 25px;
-    height: fit-content;
+    height: 200px;
     background-color: #071928;
     border-radius: 5px;
-    margin-left: 100px;
     color: #707070 !important;
   }
   .flex {
@@ -52,16 +55,16 @@ export const Container = styled.div`
     text-align: center;
   }
   .input {
-    width: 300px;
+    width: 100%;
     height: 40px;
     padding-left: 10px;
     border: 1px solid #c9c9c9;
     border-radius: 3px;
   }
-  /* span {
+  span {
     margin-top: 10px;
     font-size: 20px;
-  } */
+  }
   .find {
     background-color: #071928;
     margin: 0px 0;
@@ -84,37 +87,30 @@ export const Container = styled.div`
   svg {
     margin-top: 3px;
   }
-  .table {
-    width: 90vw;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    .desc {
-      text-align: left;
-      margin: 200px 100px;
-      padding-left: 100px;
-      display: grid;
-      grid-gap: 50px;
-      grid-template-columns: 1fr;
-    }
-  }
-  tfoot {
-    border-bottom: 0;
-  }
   @media screen and (max-width: 700px) {
-    .table {
+    width: 100vw;
+    .right-cont {
       grid-template-columns: 1fr;
+      width: 90vw;
     }
-    h1 {
-      font-size: 7vw;
+    /* padding: ; */
+    .cont {
+      width: 95vw;
+      margin: 0 auto;
+      flex-direction: column;
     }
-    h3 {
-      font-size: 5vw;
+    .left {
+      grid-template-columns: 1fr;
+      margin: 0px 0;
     }
-    .desc {
-      margin: 0 !important;
-      padding: 0 20px !important;
-      grid-gap: 3vw !important;
+    .find {
+      margin: 0 auto;
+    }
+    .right {
+      margin: 0px auto;
+      grid-template-columns: 1fr;
+      width: 90vw;
+      height: fit-content;
     }
   }
 `;

@@ -11,6 +11,7 @@ import {
 import PrincipalSubNav from '../../../components/principal-subnav/principal-subnav';
 
 import axios from 'axios';
+import CompleteModal from '../../../components/completed-modal/completed-modal.component';
 
 const PostCalendar = () => {
   const [type, settype] = useState('');
@@ -20,9 +21,10 @@ const PostCalendar = () => {
     useState('');
   const [file, setFile] = useState(null);
 
+  const [show, setShow] = useState(false);
+
   const post = (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append('file', file);
     formData.append('date', date);
@@ -31,7 +33,7 @@ const PostCalendar = () => {
     formData.append('title', title);
     console.log(title, 'he');
     switch (type) {
-      case 'notice' && 'calendar':
+      case 'calendar':
         axios
           .post(
             'http://localhost:9000/api/broadcast',
@@ -39,9 +41,28 @@ const PostCalendar = () => {
           )
           .then(function (response) {
             console.log(response);
+            setShow(true);
           })
           .catch(function (error) {
             console.log(error);
+            setShow(true);
+          })
+          .then(function () {});
+
+        break;
+      case 'notice':
+        axios
+          .post(
+            'http://localhost:9000/api/broadcast',
+            formData
+          )
+          .then(function (response) {
+            console.log(response);
+            setShow(true);
+          })
+          .catch(function (error) {
+            console.log(error);
+            setShow(true);
           })
           .then(function () {});
 
@@ -54,6 +75,7 @@ const PostCalendar = () => {
           )
           .then(function (response) {
             console.log(response);
+            setShow(true);
           })
           .catch(function (error) {
             console.log(error);
@@ -96,6 +118,10 @@ const PostCalendar = () => {
               </option>
             </Form.Select>
           </InputGroup>
+          <CompleteModal
+            show={show}
+            setShow={setShow}
+          />
           {type === 'event' && (
             <InputGroup>
               <InputGroup.Text

@@ -1,18 +1,14 @@
-import MaterialTable, {
-  MTableEditField,
-} from 'material-table';
+import axios from 'axios';
+import MaterialTable from 'material-table';
 import {
   default as React,
-  useState,
-  useEffect,
   useContext,
+  useEffect,
+  useState,
 } from 'react';
 import TeacherSubNav from '../../../components/teacher-sub-nav/teacher-sub-nav';
-import { Container } from './attendance.styles';
-
-import axios from 'axios';
-
 import { UserContext } from '../../../context/user.context';
+import { Container } from './attendance.styles';
 
 const Attendance = () => {
   const [data, setData] = useState([
@@ -33,16 +29,10 @@ const Attendance = () => {
       friday: 0,
     },
   ]);
-  let combination = [];
 
   const { user } = useContext(UserContext);
 
-  // var patt2 = /[a-zA-Z]/g;
-
-  // console.log(
-  //   user.homeRoom[0].grade.match(patt2)[0],
-  //   'jhsgdfjkasgdjfhgs'
-  // );
+  const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
     const login = async () => {
@@ -51,44 +41,19 @@ const Attendance = () => {
           'http://localhost:9000/api//get-attendance',
           {
             grade: 8,
-            //  JSON.parse(
-            //   localStorage.getItem('user')
-            // ).h,
             section: 'B',
-            // JSON.parse(
-            //   localStorage.getItem('user')
-            // ).homeRoom[0].section
-            //
           }
         )
         .then(function (response) {
           setData(response.data);
-          // response.data.map((d, index) => {
-          //   d.attendance.map(
-          //     (r) =>
-          //       r.remark === 'A' &&
-          //       combination.push({ index, r })
-          //   );
-          // });
-          // const newData = [];
-
-          // response.data.map((d, index) => {
-          //   newData.push({
-          //     fullName: `${d.firstName} ${d.middleName}`,
-          //     daysAbsent: combination.filter(
-          //       (com) => com.index === index
-          //     ).length,
-          //   });
-          // });
-
-          // setData(newData);
         })
 
         .catch(function (error) {
           if (error.response) {
-            alert(error.response.data.detail);
+            console.log(
+              error.response.data.detail
+            );
           }
-          console.log('henok', error);
         })
         .then(function () {
           // always executed
@@ -96,7 +61,7 @@ const Attendance = () => {
         });
     };
     login();
-  }, []);
+  }, [updated]);
   var today = new Date();
   var dd = String(today.getDate()).padStart(
     2,
@@ -123,7 +88,7 @@ const Attendance = () => {
       title: 'Days Absent',
       render: (row) => (
         <div>
-          {6 -
+          {5 -
             (row.monday +
               row.tuesday +
               row.thursday +
@@ -154,7 +119,7 @@ const Attendance = () => {
     {
       field: 'thursday',
       title: `Thursday`,
-      editable: 'never',
+      editable: true,
       lookup: { 1: 'Present', 0: 'Absent' },
     },
     {
@@ -162,9 +127,36 @@ const Attendance = () => {
       title: ` Friday`,
       editable:
         today !== today ? 'never' : 'always',
-      lookup: { 1: 'Present', 0: 'Absent' },
+      lookup: {
+        1: 'Present',
+        0: 'Absent',
+        null: '-',
+      },
     },
   ];
+
+  const save = (result) => {
+    console.log(result[0]['monday']);
+    result.map((row) =>
+      axios
+        .post(
+          'http://localhost:9000/api/update-attendance',
+          {
+            id: row.id,
+            monday: parseInt(row.monday),
+            tuesday: parseInt(row.tuesday),
+            wednesday: parseInt(row.wednesday),
+            thursday: parseInt(row.thursday),
+            friday: parseInt(row.friday),
+          }
+        )
+        .then(function (response) {
+          console.log(response.data);
+          setUpdated(!updated);
+        })
+        .catch((err) => console.log(err))
+    );
+  };
 
   return (
     <Container>
@@ -172,6 +164,9 @@ const Attendance = () => {
       <h1>Attendance</h1>
 
       <div className="table">
+        <h5>
+          Date: {dd}/{mm}/{yyyy}
+        </h5>
         <MaterialTable
           columns={columns}
           data={data}
@@ -190,7 +185,7 @@ const Attendance = () => {
                   updatedRows[index] =
                     emp.newData;
                 });
-                setData(updatedRows);
+                save(updatedRows);
                 resolve();
               }),
           }}

@@ -9,6 +9,7 @@ import axios from 'axios';
 import AlertModal from '../alert modal/alertModal';
 
 import { useHistory } from 'react-router-dom';
+import CompleteModal from '../completed-modal/completed-modal.component';
 const CreateAccount = (
   { type, onNext, onPrev },
   props
@@ -30,6 +31,7 @@ const CreateAccount = (
   console.log(type);
   const save = (e) => {
     e.preventDefault();
+
     switch (type) {
       case 'Teachers':
         axios
@@ -45,6 +47,7 @@ const CreateAccount = (
             }
           )
           .then(function (response) {
+            setShow(true);
             history.push('/manage-teachers');
           })
           .catch(function (error) {
@@ -101,10 +104,9 @@ const CreateAccount = (
       <IoMdContact
         style={{ fontSize: '100px' }}
       />
-      <AlertModal
+      <CompleteModal
         show={show}
-        message={alert}
-        handleClose={handleClose}
+        setShow={setShow}
       />
       <form onSubmit={save}>
         <div className="form">

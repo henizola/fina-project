@@ -110,11 +110,7 @@ const CreateAccountAdmin = ({
       <IoMdContact
         style={{ fontSize: '100px' }}
       />
-      <AlertModal
-        show={show}
-        message={alert}
-        handleClose={handleClose}
-      />
+
       <form onSubmit={save}>
         <div className="form">
           <span>First Name :</span>

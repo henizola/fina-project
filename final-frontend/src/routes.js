@@ -4,6 +4,7 @@ import ParentEvents from './pages/Parents/parent-Events/Parent-Events.page';
 import ParentExams from './pages/Parents/Parent-Exams/parent-exams.page';
 import ParentGradeArchive from './pages/Parents/parent-grade-archive/parent-grade-archive.page';
 import ParentGradeReport from './pages/Parents/parent-grade/parent-grade-report.page';
+import ParentSearch from './pages/Parents/parent-search/parent-search';
 import Broadcast from './pages/Principal/broadcast/broadcast';
 import CreateTeacherAcc from './pages/Principal/create-accout-for-teacher/create-account-for-teacher.pages';
 import CreateSysAdmin from './pages/Principal/create-system-admin/create-sys-admin.page';
@@ -119,5 +120,9 @@ export default [
   {
     path: '/parent-events',
     component: ParentEvents,
+  },
+  {
+    path: '/teachers',
+    component: ParentSearch,
   },
 ];

@@ -57,5 +57,8 @@ export const FormContainer = styled.div`
     width: 100vw;
     height: 50%;
     margin: 100px auto;
+    .default {
+      padding: 10px 30px;
+    }
   }
 `;

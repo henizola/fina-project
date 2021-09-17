@@ -10,6 +10,7 @@ export const Container = styled.div`
   background-color: #071928;
   padding: 0 50px;
   position: relative;
+  top: 0;
   .mobile {
     display: none;
   }
@@ -194,18 +195,27 @@ export const Container = styled.div`
   }
   .show {
     position: absolute;
-    right: 100px;
-    top: 0px;
-    font-size: 50px;
+    right: 70px;
+    top: 7px;
+    font-size: 30px;
   }
   img {
     height: 70px;
   }
   @media screen and (max-width: 700px) {
-    background-color: transparent !important;
+    height: 60px;
+    z-index: 999999999999;
+    position: fixed;
 
+    ul div {
+      height: 60vh;
+      margin-top: 60px;
+    }
     .desktop {
       display: none !important;
+    }
+    a {
+      font-size: 7vw;
     }
     .mobile {
       display: block;
@@ -216,7 +226,8 @@ export const Container = styled.div`
     .logo-mobile {
       position: absolute;
       left: 0;
-      top: 15px;
+      top: 10px;
+      height: 45px;
     }
     .shoew {
     }

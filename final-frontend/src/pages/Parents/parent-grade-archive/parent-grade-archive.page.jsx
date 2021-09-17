@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react';
 import { Form } from 'react-bootstrap';
+import ParentSubNav from '../../../components/parent-sub-nav/parent-sub-nav.component';
 import StudentSubNav from '../../../components/student-sub-nav/student-sub-nav.component';
 import { Container } from './parent-grade-archive.styles';
 
@@ -96,7 +97,7 @@ const GradeArchive = () => {
   const [data, setData] = useState([]);
   return (
     <Container>
-      <StudentSubNav />
+      <ParentSubNav />
       <h1>Mark List</h1>
 
       <Form.Select
