@@ -219,4 +219,32 @@ app.post(
   }
 );
 
+app.post(
+  '/change-parent-password',
+  async (req, res) => {
+    const salt = await bcrypt.genSalt(5);
+
+    password = await bcrypt.hash(
+      req.body.password,
+      salt
+    );
+
+    let oldUser = await Parents.updateOne(
+      {
+        _id: req.body.id,
+      },
+      {
+        $set: {
+          password: password,
+          first: false,
+        },
+      }
+    );
+    if (oldUser.nModified) {
+      res.send(oldUser);
+    } else {
+      res.status(500).send('pasword not changed');
+    }
+  }
+);
 module.exports = app;

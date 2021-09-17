@@ -45,11 +45,9 @@ const Exams = new mongoose.model(
     },
     grade: {
       type: String,
-      required: true,
     },
     subject: {
       type: String,
-      required: true,
     },
   })
 );

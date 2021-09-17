@@ -125,8 +125,7 @@ app.post(
     let { error } = studentSchema.validate(
       req.body
     );
-    const fullName =
-      req.body.firstName + req.body.lastName;
+    const fullName = `${req.body.firstName}${req.body.lastName}`;
 
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
@@ -167,7 +166,6 @@ app.post(
       const lastStudent = await Student.find()
         .limit(1)
         .sort({ $natural: -1 });
-      console.log(lastStudent.id);
     }
     const sec = ['A', ' B', ' C', ' D'];
     function getRandomInt(max) {
@@ -175,7 +173,6 @@ app.post(
     }
 
     const be = getRandomInt(3);
-    console.log(sec[be]);
 
     const student = new Student({
       email: req.body.email,
@@ -233,7 +230,6 @@ app.post('/student-sign-in', async (req, res) => {
       .status(400)
       .send('user name or password not correct');
   }
-  console.log(req.body);
 
   const validPassword = await bcrypt.compare(
     req.body.password,
@@ -295,10 +291,6 @@ app.post(
     });
 
     const fullName = `${user.firstName} ${user.lastName} `;
-    console.log(
-      'tssss',
-      `${user[0].firstName} ${user[0].lastName} `
-    );
 
     const salt = await bcrypt.genSalt(5);
     let password = `${fullName
@@ -367,26 +359,6 @@ app.post(
       }
     );
     if (oldUser.nModified) {
-      // var mailOptions = {
-      //   from: 'cambridgeeth@gmail.com',
-      //   to: student.email,
-      //   subject: 'Password Changed',
-      //   text: `Dear your Password Has been changed sucessfully if this is not you please report to school immediately`,
-      // };
-
-      // transporter.sendMail(
-      //   mailOptions,
-      //   function (error, info) {
-      //     if (error) {
-      //       console.log(error);
-      //     } else {
-      //       console.log(
-      //         'Email sent: ' + info.response
-      //       );
-      //     }
-      //   }
-      // );
-
       res.send(oldUser);
     } else {
       res.status(500).send('pasword not changed');

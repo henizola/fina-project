@@ -155,5 +155,28 @@ app.post(
     res.status(200).send(students);
   }
 );
+app.post(
+  '/update-attendance',
+  async (req, res) => {
+    let oldStudent = await Attendance.updateOne(
+      {
+        id: req.body.id,
+      },
+      {
+        $set: {
+          monday: parseInt(req.body.monday),
+          tuesday: req.body.tuesday,
+          wednesday: req.body.wednesday,
+          thursday: req.body.thursday,
+          friday: parseInt(req.body.friday),
+        },
+      }
+    );
+    if (oldStudent.nModified) {
+      console.log('done');
+      res.send('done');
+    }
+  }
+);
 
 module.exports = app;
