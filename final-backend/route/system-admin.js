@@ -56,6 +56,10 @@ const SystemAdmin = new mongoose.model(
       type: String,
       required: true,
     },
+    first: {
+      type: Boolean,
+      default: true,
+    },
   })
 );
 
@@ -193,6 +197,35 @@ app.post('/get-admins', async (req, res) => {
   }
   res.status(200).send(user);
 });
+
+app.post(
+  '/change-admin-password',
+  async (req, res) => {
+    const salt = await bcrypt.genSalt(5);
+    console.log('here');
+    password = await bcrypt.hash(
+      req.body.password,
+      salt
+    );
+
+    let oldUser = await SystemAdmin.updateOne(
+      {
+        _id: req.body.id,
+      },
+      {
+        $set: {
+          password: password,
+          first: false,
+        },
+      }
+    );
+    if (oldUser.nModified) {
+      res.send(oldUser);
+    } else {
+      res.status(500).send('pasword not changed');
+    }
+  }
+);
 
 // app.post('/get-clients', async (req, res) => {
 //   const clients = await SystemAdmin.find({

@@ -47,16 +47,44 @@ const SignIn = () => {
           JSON.stringify(response.data.user)
         );
 
-        if (role === 'student') {
-          history.push('/student-attendance');
-        } else if (role === 'teachers') {
-          history.push('/attendance');
-        } else if (role === 'principal') {
-          history.push('/manage-teachers');
-        } else if (role === 'system-admin') {
-          history.push('/Create-profile');
+        console.log(
+          'hereeeeee',
+          response.data.user.first
+        );
+        if (!response.data.user.first) {
+          if (role === 'student') {
+            history.push('/student-attendance');
+          } else if (role === 'teachers') {
+            history.push('/attendance');
+          } else if (role === 'principal') {
+            history.push('/manage-teachers');
+          } else if (role === 'system-admin') {
+            history.push('/Create-profile');
+          } else {
+            history.push('/parent-attendance');
+          }
         } else {
-          history.push('/parent-attendance');
+          if (role === 'student') {
+            history.push(
+              '/change-password/student'
+            );
+          } else if (role === 'teachers') {
+            history.push(
+              '/change-password/teacher'
+            );
+          } else if (role === 'principal') {
+            history.push(
+              '/change-password/principal'
+            );
+          } else if (role === 'system-admin') {
+            history.push(
+              '/change-password/system-admin'
+            );
+          } else {
+            history.push(
+              '/change-password/parents'
+            );
+          }
         }
       })
 

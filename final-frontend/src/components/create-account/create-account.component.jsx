@@ -72,7 +72,7 @@ const CreateAccount = (
             }
           )
           .then(function (response) {
-            history.push('/manage-teachers');
+            history.push('/manage-sys-admin');
           })
           .catch(function (error) {
             setShow(true);

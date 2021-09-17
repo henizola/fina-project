@@ -75,6 +75,10 @@ const Teacher = new mongoose.model(
     subject: {
       type: String,
     },
+    teach: {
+      type: String,
+      default: Math.floor(Math.random() * 12),
+    },
   })
 );
 

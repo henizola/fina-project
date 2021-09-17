@@ -88,9 +88,8 @@ const ManageTeacher = () => {
       width: 10,
     },
     {
-      field: 'classTeach',
+      field: 'teach',
       title: 'Class To Teach',
-      render: (rowData) => <MultipleSelect />,
     },
   ];
 
@@ -141,11 +140,13 @@ const ManageTeacher = () => {
                   resolve();
                 }, 2000);
               }),
+
             onBulkUpdate: (selectedRows) =>
               new Promise((resolve, reject) => {
                 const rows =
                   Object.values(selectedRows);
                 const updatedRows = [...teachers];
+                console.log(updatedRows);
                 let index;
                 rows.map((emp) => {
                   index =
@@ -153,7 +154,7 @@ const ManageTeacher = () => {
                   updatedRows[index] =
                     emp.newData;
                 });
-                setTeachers(updatedRows);
+                // handdleUpdate(updatedRows);
                 resolve();
               }),
           }}

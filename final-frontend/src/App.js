@@ -11,6 +11,7 @@ import GuardedRoute from './routeguard';
 import SignIn from './pages/sign-in/sign-in.component';
 import { UserProvider } from './context/user.context';
 import Stuff from './pages/stuff/stuffs.component';
+import ChangePassword from './pages/change-password/change-password.page';
 
 function App() {
   return (
@@ -29,6 +30,10 @@ function App() {
           <Route
             path="/sign-in/:role"
             component={SignIn}
+          />
+          <Route
+            path="/change-password/:role"
+            component={ChangePassword}
           />
           <Route
             exact

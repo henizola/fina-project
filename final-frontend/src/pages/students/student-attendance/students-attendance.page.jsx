@@ -96,6 +96,8 @@ const StudentAttendance = () => {
         >
           {row.remark === 0
             ? 'Absent'
+            : row.remark === null
+            ? '-'
             : 'Present'}
         </div>
       ),
