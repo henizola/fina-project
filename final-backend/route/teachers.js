@@ -1,36 +1,36 @@
-const express = require('express');
+const express = require("express");
 
 const app = express();
 
-const Joi = require('joi');
+const Joi = require("joi");
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const fs = require('fs');
+const fs = require("fs");
 
-const { admin } = require('./super');
+const { admin } = require("./super");
 
-const multer = require('multer');
+const multer = require("multer");
 
-var nodemailer = require('nodemailer');
+var nodemailer = require("nodemailer");
 
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
-const path = require('path');
-const { date } = require('joi');
+const path = require("path");
+const { date } = require("joi");
 
 var transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
-    user: 'CambridgeEth@gmail.com',
-    pass: 'cambridge@12345',
+    user: "CambridgeEth@gmail.com",
+    pass: "cambridge@12345",
   },
 });
 
 app.use(express.json());
 const Teacher = new mongoose.model(
-  'Teacher',
+  "Teacher",
   new mongoose.Schema({
     email: {
       type: String,
@@ -61,7 +61,7 @@ const Teacher = new mongoose.model(
       type: Number,
     },
     homeRoom: {
-      type: Array,
+      type: String,
       maxlength: 1,
     },
 
@@ -77,7 +77,6 @@ const Teacher = new mongoose.model(
     },
     teach: {
       type: String,
-      default: Math.floor(Math.random() * 12),
     },
   })
 );
@@ -89,15 +88,16 @@ const teacherSchema = Joi.object({
   lastName: Joi.string().required(),
   phone: Joi.string().required(),
   subject: Joi.string().required(),
+  homeRoom: Joi.string(),
 });
 
 const storage = multer.diskStorage({
   destination: function (req, res, cb) {
-    cb(null, path.join(__dirname, '..', 'docs'));
+    cb(null, path.join(__dirname, "..", "docs"));
   },
   filename: function (req, file, cb) {
     const now = new Date().toISOString();
-    const date = now.replace(/:/g, '-');
+    const date = now.replace(/:/g, "-");
     cb(null, date + file.originalname);
   },
 });
@@ -105,20 +105,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 app.post(
-  '/create-teacher',
+  "/create-teacher",
   // admin,
   async (req, res) => {
-    let { error } = teacherSchema.validate(
-      req.body
-    );
-    const fullName =
-      req.body.firstName + req.body.lastName;
+    let { error } = teacherSchema.validate(req.body);
+    const fullName = req.body.firstName + req.body.lastName;
 
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
 
     if (error) {
-      res.send(error.details[0].message);
+      return res.send(error.details[0].message);
     }
 
     let found = false;
@@ -133,27 +130,19 @@ app.post(
       }
     });
 
-    if (found)
-      return res
-        .status(500)
-        .send('Email or Phone Number taken');
+    if (found) return res.status(500).send("Email or Phone Number taken");
 
     const salt = await bcrypt.genSalt(5);
     let password = `${
-      firstName +
-      lastName.replace(/\s+/g, '').toLowerCase()
+      firstName + lastName.replace(/\s+/g, "").toLowerCase()
     }@1234`;
     password = await bcrypt.hash(password, salt);
 
-    const lastTeacher = await Teacher.find()
-      .limit(1)
-      .sort({ $natural: -1 });
+    const lastTeacher = await Teacher.find().limit(1).sort({ $natural: -1 });
     let id = 4231;
 
     if (lastTeacher.length) {
-      const lastTeacher = await Teacher.find()
-        .limit(1)
-        .sort({ $natural: -1 });
+      const lastTeacher = await Teacher.find().limit(1).sort({ $natural: -1 });
     }
 
     const teacher = new Teacher({
@@ -165,56 +154,44 @@ app.post(
       phone: req.body.phone,
       id: id,
       subject: req.body.subject,
+      homeRoom: req.body.hommeRoom,
     });
 
     var mailOptions = {
-      from: 'cambridgeeth@gmail.com',
+      from: "cambridgeeth@gmail.com",
       to: req.body.email,
-      subject: 'Account created',
+      subject: "Account created",
       text: `Dear ${
-        req.body.firstName +
-        ' ' +
-        req.body.lastName
+        req.body.firstName + " " + req.body.lastName
       } Wellcome to Cambridge Academy Ethiopia your Teacher Id is CAM${id}  to activate your account please sign in using your email your default password is ${
-        firstName +
-        lastName.replace(/\s+/g, '').toLowerCase()
+        firstName + lastName.replace(/\s+/g, "").toLowerCase()
       }@1234`,
     };
 
-    transporter.sendMail(
-      mailOptions,
-      function (error, info) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log(
-            'Email sent: ' + info.response
-          );
-        }
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
       }
-    );
+    });
 
     const result = await teacher.save();
     res.status(200).send(result);
   }
 );
 
-app.post('/teacher-sign-in', async (req, res) => {
+app.post("/teacher-sign-in", async (req, res) => {
   const user = await Teacher.findOne({
     email: req.body.email,
   });
   console.log(user);
 
   if (!user) {
-    return res
-      .status(400)
-      .send('user name or password not correct');
+    return res.status(400).send("user name or password not correct");
   }
 
-  const validPassword = await bcrypt.compare(
-    req.body.password,
-    user.password
-  );
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (validPassword) {
     const token = jwt.sign(
       {
@@ -232,112 +209,94 @@ app.post('/teacher-sign-in', async (req, res) => {
     };
     res.send(resp);
   } else {
-    res
-      .status(500)
-      .send('user name or password not correct');
+    res.status(500).send("user name or password not correct");
   }
 });
 
-app.post('/get-teachers', async (req, res) => {
+app.post("/get-teachers", async (req, res) => {
   const user = await Teacher.find();
 
   if (!user) {
-    return res
-      .status(400)
-      .send('No Teacher Available');
+    return res.status(400).send("No Teacher Available");
   }
   res.status(200).send(user);
 });
-app.post('/get-one-teacher', async (req, res) => {
+app.post("/get-one-teacher", async (req, res) => {
   const user = await Teacher.findOne({
     _id: req.body.id,
   });
 
   if (!user) {
-    return res
-      .status(400)
-      .send('No Teacher Available');
+    return res.status(400).send("No Teacher Available");
   }
   res.status(200).send(user);
 });
 
-app.post(
-  '/assign-teacher-class',
-  async (req, res) => {
-    let teacher = await Teacher.updateOne(
-      {
-        _id: req.body.id,
-      },
-      {
-        $push: {
-          classToTeach: {
-            grade: req.body.grade,
-            section: req.body.section,
-          },
+app.post("/assign-teacher-class", async (req, res) => {
+  let teacher = await Teacher.updateOne(
+    {
+      _id: req.body.id,
+    },
+    {
+      $push: {
+        classToTeach: {
+          grade: req.body.grade,
+          section: req.body.section,
         },
-      }
-    );
-    if (teacher.nModified) {
-      res.send(teacher);
-    } else {
-      res.status(500).send('Error server error');
-    }
-  }
-);
-
-app.post(
-  '/assign-homeroom-teacher',
-  async (req, res) => {
-    let teacher = await Teacher.updateOne(
-      {
-        _id: req.body.id,
       },
-      {
-        $push: {
-          homeRoom: {
-            grade: req.body.grade,
-            section: req.body.section,
-          },
-        },
-      }
-    );
-    if (teacher.nModified) {
-      res.send(teacher);
-    } else {
-      res.status(500).send('Error server error');
     }
-
-    res.status(200).send(user);
+  );
+  if (teacher.nModified) {
+    res.send(teacher);
+  } else {
+    res.status(500).send("Error server error");
   }
-);
+});
 
-app.post(
-  '/change-teacher-password',
-  async (req, res) => {
-    const salt = await bcrypt.genSalt(5);
-
-    password = await bcrypt.hash(
-      req.body.password,
-      salt
-    );
-
-    let oldUser = await Teacher.updateOne(
-      {
-        _id: req.body.id,
+app.post("/assign-homeroom-teacher", async (req, res) => {
+  let teacher = await Teacher.updateOne(
+    {
+      _id: req.body.id,
+    },
+    {
+      $push: {
+        homeRoom: {
+          grade: req.body.grade,
+          section: req.body.section,
+        },
       },
-      {
-        $set: {
-          password: password,
-          first: false,
-        },
-      }
-    );
-    if (oldUser.nModified) {
-      res.send(oldUser);
-    } else {
-      res.status(500).send('pasword not changed');
     }
+  );
+  if (teacher.nModified) {
+    res.send(teacher);
+  } else {
+    res.status(500).send("Error server error");
   }
-);
+
+  res.status(200).send(user);
+});
+
+app.post("/change-teacher-password", async (req, res) => {
+  const salt = await bcrypt.genSalt(5);
+
+  password = await bcrypt.hash(req.body.password, salt);
+
+  let oldUser = await Teacher.updateOne(
+    {
+      _id: req.body.id,
+    },
+    {
+      $set: {
+        password: password,
+        first: false,
+      },
+    }
+  );
+  if (oldUser.nModified) {
+    res.send(oldUser);
+  } else {
+    res.status(500).send("pasword not changed");
+  }
+});
 
 module.exports = app;

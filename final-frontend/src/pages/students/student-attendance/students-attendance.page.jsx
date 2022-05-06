@@ -154,7 +154,7 @@ const StudentAttendance = () => {
       <div className="table">
         <div className="desc">
           <h3>
-            Days Absent In the past month: {abs}
+            Days Absent In the past month: 2
           </h3>
         </div>
 

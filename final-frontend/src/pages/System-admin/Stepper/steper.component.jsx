@@ -1,26 +1,18 @@
-import React, {
-  useState,
-  useContext,
-  useRef,
-} from 'react';
-import { useReactToPrint } from 'react-to-print';
-
-import { Container } from './steper.style';
-
-import Stepper from '../../../components/stepper/steperr.component';
-import CreateAccount from '../../../components/create-account/create-account.component';
-import CreateAccountAdmin from '../../../components/create-account-admin/create-account-admin.component';
-
-import { UserContext } from '../../../context/user.context';
-
-import axios from 'axios';
-import Printable from '../../../components/printable/printable.component';
-import CompleteModal from '../../../components/completed-modal/completed-modal.component';
+import axios from "axios";
+import React, { useContext, useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
+import CreateAccountAdmin from "../../../components/create-account-admin/create-account-admin.component";
+import Printable from "../../../components/printable/printable.component";
+import Stepper from "../../../components/stepper/steperr.component";
+import { UserContext } from "../../../context/user.context";
+import { Container } from "./steper.style";
 
 const AccountStepper = () => {
-  const [currentStep, setCurrentStep] =
-    useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
   const [show, setShow] = useState(true);
+  const [studentData, setStudebtData] = useState(null);
+  const [response, setResponse] = useState({});
+  const [wait, setWait] = useState(true);
   const onNext = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -32,20 +24,8 @@ const AccountStepper = () => {
     setCurrentStep(0);
   };
 
-  const [studentData, stStudebtData] =
-    useState(null);
-
-  const {
-    student,
-    setStudent,
-    mother,
-    setMother,
-    father,
-    setFather,
-  } = useContext(UserContext);
-  console.log(student);
-  console.log(mother);
-  console.log(father);
+  const { student, setStudent, mother, setMother, father, setFather } =
+    useContext(UserContext);
 
   const setStudents = (value) => {
     setStudent(value);
@@ -59,59 +39,25 @@ const AccountStepper = () => {
 
   const registerStudent = async () => {
     await axios
-      .post(
-        'http://localhost:9000/api/create-student',
-        student
-      )
+      .post("http://localhost:9000/api/register-student", {
+        ...student,
+        ...mother,
+        ...father,
+      })
       .then(function (response) {
-        registerFather(response.data._id);
-        registerMother(response.data._id);
-        stStudebtData(response.data);
-        console.log();
+        setStudebtData(response.data.studentResult);
+        setResponse(response.data);
+        console.log("response:", response);
+        setWait(false);
       })
       .catch(function (error) {
-        // setShow(true);
-        // setAlert(error.response.data);
+        console.log(error, "this is error");
       })
       .then(function () {});
 
     // Check for response and if successful call the second api
   };
 
-  const registerFather = async (id) => {
-    // console.log(id, 'sdfbskjdfhgksdjfgsjkhdfg');
-    await axios
-      .post(
-        'http://localhost:9000/api/create-parents',
-        { ...father, childId: id }
-      )
-      .then(function (response) {})
-      .catch(function (error) {
-        // setShow(true);
-        // setAlert(error.response.data);
-      })
-      .then(function () {});
-
-    // Check for response and if successful call the second api
-  };
-  const registerMother = async (id) => {
-    // console.log(id, 'sdfbskjdfhgksdjfgsjkhdfg');
-    await axios
-      .post(
-        'http://localhost:9000/api/create-parents',
-        { ...mother, childId: id }
-      )
-      .then(function (response) {
-        setShow(true);
-      })
-      .catch(function (error) {
-        // setShow(true);
-        // setAlert(error.response.data);
-      })
-      .then(function () {});
-
-    // Check for response and if successful call the second api
-  };
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -120,39 +66,42 @@ const AccountStepper = () => {
     <Container>
       <Stepper currentStep={currentStep}>
         <CreateAccountAdmin
-          type={'student'}
+          type={"student"}
           onNext={onNext}
           onPrev={onPrev}
-          value={'student'}
+          value={"student"}
           setter={setStudents}
         />
         <CreateAccountAdmin
-          type={'parents'}
+          type={"parents"}
           onNext={onNext}
           onPrev={onPrev}
-          value={'father'}
+          value={"father"}
           setter={setFathers}
         />
         <CreateAccountAdmin
-          type={'parents'}
+          type={"parents"}
           onNext={onNext}
           onPrev={onPrev}
-          value={'mother'}
+          value={"mother"}
           setter={setMothers}
           onRegister={registerStudent}
           show={show}
           setShow={setShow}
         />
-        <Printable
-          ref={componentRef}
-          student={student}
-          mother={mother}
-          father={father}
-          studentData={studentData}
-          onRegister={handlePrint}
-          show={show}
-          setShow={setShow}
-        />
+
+        {!wait && (
+          <Printable
+            ref={componentRef}
+            student={response.studentResult}
+            mother={response.motherResult}
+            father={response.fatherResult}
+            studentData={studentData}
+            onRegister={handlePrint}
+            show={show}
+            setShow={setShow}
+          />
+        )}
       </Stepper>
     </Container>
   );

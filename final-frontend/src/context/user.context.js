@@ -1,32 +1,29 @@
-import React, {
-  useState,
-  createContext,
-} from 'react';
+import React, { useState, createContext } from "react";
 
 export const UserContext = createContext();
 
 export const UserProvider = (props) => {
   const [student, setStudent] = useState({
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    phone: '',
-    email: '',
+    firstName: "",
+    lastName: "",
+    middleName: "",
+    phone: "",
+    email: "",
     grade: null,
   });
   const [mother, setMother] = useState({
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    phone: '',
-    email: '',
+    motherFirstName: "mom",
+    motherLastName: "mom",
+    motherMiddleName: "mom",
+    motherPhone: "654897079685765876",
+    motherEmail: "mom@gmail.com",
   });
   const [father, setFather] = useState({
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    phone: '',
-    email: '',
+    fatherFirstName: "dad",
+    fatherLastName: "",
+    fatherMiddleName: "",
+    fatherPhone: "",
+    fatherEmail: "",
   });
   const [user, setUser] = useState(null);
 

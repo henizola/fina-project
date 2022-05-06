@@ -25,7 +25,7 @@ const PostExam = () => {
 
   const { user } = useContext(UserContext);
 
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     const login = async () => {
